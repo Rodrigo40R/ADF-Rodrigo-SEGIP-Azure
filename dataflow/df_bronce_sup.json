@@ -285,15 +285,7 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError',",
-				"     mapColumn(",
-				"          inscripcion_id,",
-				"          ci_beneficiaria,",
-				"          establecimiento_id,",
-				"          fecha_inscripcion,",
-				"          semana_gestacion,",
-				"          estado",
-				"     )) ~> sinkInscripciones"
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkInscripciones"
 			]
 		}
 	}
