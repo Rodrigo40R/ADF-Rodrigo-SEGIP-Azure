@@ -1,0 +1,10 @@
+{
+	"name": "adf-sup-as-dw-rodri",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "chilecentral"
+}
