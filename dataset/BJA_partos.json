@@ -14,7 +14,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "bja_partos.csv",
-				"folderPath": "bronze",
+				"folderPath": "raw",
 				"fileSystem": "datalake-segip"
 			},
 			"columnDelimiter": ",",

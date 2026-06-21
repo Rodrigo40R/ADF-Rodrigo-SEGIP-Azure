@@ -14,7 +14,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "sup_establecimientos.csv",
-				"folderPath": "bronze",
+				"folderPath": "raw",
 				"fileSystem": "datalake-segip"
 			},
 			"columnDelimiter": ",",

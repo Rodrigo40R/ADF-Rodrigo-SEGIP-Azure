@@ -14,7 +14,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "sup_inscripciones.csv",
-				"folderPath": "bronze",
+				"folderPath": "raw",
 				"fileSystem": "datalake-segip"
 			},
 			"columnDelimiter": ",",
