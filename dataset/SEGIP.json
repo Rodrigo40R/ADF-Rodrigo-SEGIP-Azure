@@ -1,0 +1,60 @@
+{
+	"name": "SEGIP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Datalake_SEGIP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bronze"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "segip.csv",
+				"folderPath": "bronze",
+				"fileSystem": "datalake-segip"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "CI",
+				"type": "String"
+			},
+			{
+				"name": "Nombres",
+				"type": "String"
+			},
+			{
+				"name": "Ap. Paterno",
+				"type": "String"
+			},
+			{
+				"name": "Ap. Materno",
+				"type": "String"
+			},
+			{
+				"name": "Fecha Nac.",
+				"type": "String"
+			},
+			{
+				"name": "Género",
+				"type": "String"
+			},
+			{
+				"name": "Estado Civil",
+				"type": "String"
+			},
+			{
+				"name": "Municipio",
+				"type": "String"
+			}
+		]
+	}
+}

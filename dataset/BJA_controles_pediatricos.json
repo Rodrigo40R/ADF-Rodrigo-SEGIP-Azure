@@ -1,0 +1,68 @@
+{
+	"name": "BJA_controles_pediatricos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Datalake_SEGIP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bronze"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "bja_controles_pediatricos.csv",
+				"folderPath": "bronze",
+				"fileSystem": "datalake-segip"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "control_pediatrico_id",
+				"type": "String"
+			},
+			{
+				"name": "ci_nino",
+				"type": "String"
+			},
+			{
+				"name": "ci_madre",
+				"type": "String"
+			},
+			{
+				"name": "establecimiento_id",
+				"type": "String"
+			},
+			{
+				"name": "nro_control",
+				"type": "String"
+			},
+			{
+				"name": "fecha_control",
+				"type": "String"
+			},
+			{
+				"name": "peso_nino_kg",
+				"type": "String"
+			},
+			{
+				"name": "talla_nino_cm",
+				"type": "String"
+			},
+			{
+				"name": "vacuna_aplicada",
+				"type": "String"
+			},
+			{
+				"name": "resultado",
+				"type": "String"
+			}
+		]
+	}
+}

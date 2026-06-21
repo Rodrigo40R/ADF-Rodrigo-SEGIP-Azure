@@ -1,0 +1,60 @@
+{
+	"name": "BJA_partos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Datalake_SEGIP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bronze"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "bja_partos.csv",
+				"folderPath": "bronze",
+				"fileSystem": "datalake-segip"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "parto_id",
+				"type": "String"
+			},
+			{
+				"name": "ci_madre",
+				"type": "String"
+			},
+			{
+				"name": "ci_recien_nacido",
+				"type": "String"
+			},
+			{
+				"name": "establecimiento_id",
+				"type": "String"
+			},
+			{
+				"name": "fecha_parto",
+				"type": "String"
+			},
+			{
+				"name": "tipo_parto",
+				"type": "String"
+			},
+			{
+				"name": "peso_nacimiento_kg",
+				"type": "String"
+			},
+			{
+				"name": "talla_nacimiento_cm",
+				"type": "String"
+			}
+		]
+	}
+}
