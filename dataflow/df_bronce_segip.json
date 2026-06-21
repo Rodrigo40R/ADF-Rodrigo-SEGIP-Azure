@@ -58,7 +58,12 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sinkSegip"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          CI,",
+				"          Nombres,",
+				"          Municipio",
+				"     )) ~> sinkSegip"
 			]
 		}
 	}
