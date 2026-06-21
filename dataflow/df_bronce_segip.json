@@ -1,0 +1,70 @@
+{
+	"name": "df_bronce_segip",
+	"properties": {
+		"folder": {
+			"name": "bronce"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SEGIP",
+						"type": "DatasetReference"
+					},
+					"name": "sourceSegip"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "bronce_SEGIP",
+						"type": "DatasetReference"
+					},
+					"name": "sinkSegip"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          CI as string,",
+				"          Nombres as string,",
+				"          {Ap. Paterno} as string,",
+				"          {Ap. Materno} as string,",
+				"          {Fecha Nac.} as string,",
+				"          {Género} as string,",
+				"          {Estado Civil} as string,",
+				"          Municipio as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourceSegip",
+				"sourceSegip sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          CI as string,",
+				"          Nombres as string,",
+				"          Ap_Patern as string,",
+				"          Ap_Matern as string,",
+				"          Fecha_Nac as string,",
+				"          Genero as string,",
+				"          Estado_Civ as string,",
+				"          Municipio as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          CI,",
+				"          Nombres,",
+				"          Municipio",
+				"     )) ~> sinkSegip"
+			]
+		}
+	}
+}
