@@ -62,6 +62,12 @@
 				"     mapColumn(",
 				"          CI,",
 				"          Nombres,",
+				"          Municipio,",
+				"          Ap_Patern = {Ap. Paterno},",
+				"          Ap_Matern = {Ap. Materno},",
+				"          Fecha_Nac = {Fecha Nac.},",
+				"          Genero = {Género},",
+				"          Estado_Civ = {Estado Civil},",
 				"          Municipio",
 				"     )) ~> sinkSegip"
 			]
