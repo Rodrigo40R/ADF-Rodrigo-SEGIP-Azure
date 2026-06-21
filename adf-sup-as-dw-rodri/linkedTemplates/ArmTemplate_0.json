@@ -76,6 +76,356 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/BJA_bronce_controles_pediatricos')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "bronze"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "control_pediatrico_id",
+						"type": "varchar"
+					},
+					{
+						"name": "ci_nino",
+						"type": "varchar"
+					},
+					{
+						"name": "ci_madre",
+						"type": "varchar"
+					},
+					{
+						"name": "establecimiento_id",
+						"type": "varchar"
+					},
+					{
+						"name": "nro_control",
+						"type": "varchar"
+					},
+					{
+						"name": "fecha_control",
+						"type": "varchar"
+					},
+					{
+						"name": "peso_nino_kg",
+						"type": "varchar"
+					},
+					{
+						"name": "talla_nino_cm",
+						"type": "varchar"
+					},
+					{
+						"name": "vacuna_aplicada",
+						"type": "varchar"
+					},
+					{
+						"name": "resultado",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "bronze",
+					"table": "bja_controles_pediatricos"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BJA_bronce_controles_prenatales')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "bronze"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "control_prenatal_id",
+						"type": "varchar"
+					},
+					{
+						"name": "ci_beneficiaria",
+						"type": "varchar"
+					},
+					{
+						"name": "establecimiento_id",
+						"type": "varchar"
+					},
+					{
+						"name": "nro_control",
+						"type": "varchar"
+					},
+					{
+						"name": "fecha_control",
+						"type": "varchar"
+					},
+					{
+						"name": "semana_gestacion",
+						"type": "varchar"
+					},
+					{
+						"name": "peso_madre_kg",
+						"type": "varchar"
+					},
+					{
+						"name": "presion_arterial",
+						"type": "varchar"
+					},
+					{
+						"name": "resultado",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "bronze",
+					"table": "bja_controles_prenatales"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BJA_bronce_establecimientos_salud')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "bronze"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "establecimiento_id",
+						"type": "varchar"
+					},
+					{
+						"name": "codigo_snis",
+						"type": "varchar"
+					},
+					{
+						"name": "nombre",
+						"type": "varchar"
+					},
+					{
+						"name": "tipo",
+						"type": "varchar"
+					},
+					{
+						"name": "nivel_atencion",
+						"type": "varchar"
+					},
+					{
+						"name": "municipio",
+						"type": "varchar"
+					},
+					{
+						"name": "departamento",
+						"type": "varchar"
+					},
+					{
+						"name": "red_salud",
+						"type": "varchar"
+					},
+					{
+						"name": "estado",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "bronze",
+					"table": "bja_establecimientos_salud"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BJA_bronce_inscripciones')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "bronze"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "inscripcion_id",
+						"type": "varchar"
+					},
+					{
+						"name": "ci_beneficiaria",
+						"type": "varchar"
+					},
+					{
+						"name": "establecimiento_id",
+						"type": "varchar"
+					},
+					{
+						"name": "fecha_inscripcion",
+						"type": "varchar"
+					},
+					{
+						"name": "semana_gestacion",
+						"type": "varchar"
+					},
+					{
+						"name": "estado",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "bronze",
+					"table": "bja_inscripciones"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BJA_bronce_pagos')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "bronze"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "pago_id",
+						"type": "varchar"
+					},
+					{
+						"name": "ci_beneficiaria",
+						"type": "varchar"
+					},
+					{
+						"name": "concepto_pago",
+						"type": "varchar"
+					},
+					{
+						"name": "monto_bs",
+						"type": "varchar"
+					},
+					{
+						"name": "fecha_pago",
+						"type": "varchar"
+					},
+					{
+						"name": "estado_pago",
+						"type": "varchar"
+					},
+					{
+						"name": "canal_pago",
+						"type": "varchar"
+					},
+					{
+						"name": "nro_comprobante",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "bronze",
+					"table": "bja_pagos"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BJA_bronce_partos')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "bronze"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "parto_id",
+						"type": "varchar"
+					},
+					{
+						"name": "ci_madre",
+						"type": "varchar"
+					},
+					{
+						"name": "ci_recien_nacido",
+						"type": "varchar"
+					},
+					{
+						"name": "establecimiento_id",
+						"type": "varchar"
+					},
+					{
+						"name": "fecha_parto",
+						"type": "varchar"
+					},
+					{
+						"name": "tipo_parto",
+						"type": "varchar"
+					},
+					{
+						"name": "peso_nacimiento_kg",
+						"type": "varchar"
+					},
+					{
+						"name": "talla_nacimiento_cm",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "bronze",
+					"table": "bja_partos"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/BJA_controles_pediatricos')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -93,7 +443,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "bja_controles_pediatricos.csv",
-						"folderPath": "bronze",
+						"folderPath": "raw",
 						"fileSystem": "datalake-segip"
 					},
 					"columnDelimiter": ",",
@@ -166,7 +516,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "bja_controles_prenatales.csv",
-						"folderPath": "bronze",
+						"folderPath": "raw",
 						"fileSystem": "datalake-segip"
 					},
 					"columnDelimiter": ",",
@@ -235,7 +585,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "bja_establecimientos_salud.csv",
-						"folderPath": "bronze",
+						"folderPath": "raw",
 						"fileSystem": "datalake-segip"
 					},
 					"columnDelimiter": ",",
@@ -304,7 +654,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "bja_inscripciones.csv",
-						"folderPath": "bronze",
+						"folderPath": "raw",
 						"fileSystem": "datalake-segip"
 					},
 					"columnDelimiter": ",",
@@ -361,7 +711,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "bja_pagos.csv",
-						"folderPath": "bronze",
+						"folderPath": "raw",
 						"fileSystem": "datalake-segip"
 					},
 					"columnDelimiter": ",",
@@ -426,7 +776,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "bja_partos.csv",
-						"folderPath": "bronze",
+						"folderPath": "raw",
 						"fileSystem": "datalake-segip"
 					},
 					"columnDelimiter": ",",
@@ -491,7 +841,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "segip.csv",
-						"folderPath": "bronze",
+						"folderPath": "raw",
 						"fileSystem": "datalake-segip"
 					},
 					"columnDelimiter": ",",
@@ -556,7 +906,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "sup_boletas.csv",
-						"folderPath": "bronze",
+						"folderPath": "raw",
 						"fileSystem": "datalake-segip"
 					},
 					"columnDelimiter": ",",
@@ -596,320 +946,219 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SUP_catalogo_paquetes')]",
+			"name": "[concat(parameters('factoryName'), '/SUP_bronce_boletas')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "Datalake_SEGIP",
+					"referenceName": "AzureSqlDatabaseSEGIP",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
 					"name": "bronze"
 				},
 				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "sup_catalogo-paquetes.csv",
-						"folderPath": "bronze",
-						"fileSystem": "datalake-segip"
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "boleta_id",
+						"type": "varchar"
 					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
+					{
+						"name": "control_id",
+						"type": "varchar"
+					},
+					{
+						"name": "ci_beneficiaria",
+						"type": "varchar"
+					},
+					{
+						"name": "nro_boleta",
+						"type": "varchar"
+					},
+					{
+						"name": "fecha_emision",
+						"type": "varchar"
+					},
+					{
+						"name": "estado",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "bronze",
+					"table": "sup_boletas"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SUP_bronce_catalogo_paquetes')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "bronze"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
 				"schema": [
 					{
 						"name": "paquete_id",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "nombre",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "contenido",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "peso_estandar_kg",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "costo_estimado_bs",
-						"type": "String"
+						"type": "varchar"
 					}
-				]
+				],
+				"typeProperties": {
+					"schema": "bronze",
+					"table": "sup_catalogo_paquetes"
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Datalake_SEGIP')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SUP_controles')]",
+			"name": "[concat(parameters('factoryName'), '/SUP_bronce_controles')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "Datalake_SEGIP",
+					"referenceName": "AzureSqlDatabaseSEGIP",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
 					"name": "bronze"
 				},
 				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "sup_controles.csv",
-						"folderPath": "bronze",
-						"fileSystem": "datalake-segip"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
+				"type": "AzureSqlTable",
 				"schema": [
 					{
 						"name": "control_id",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "ci_beneficiaria",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "establecimiento_id",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "nro_control",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "fecha_control",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "semana_gestacion",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "peso_madre_kg",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "presion_arterial",
-						"type": "String"
+						"type": "varchar"
 					}
-				]
+				],
+				"typeProperties": {
+					"schema": "bronze",
+					"table": "sup_controles"
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Datalake_SEGIP')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SUP_entregas')]",
+			"name": "[concat(parameters('factoryName'), '/SUP_bronce_entregas')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "Datalake_SEGIP",
+					"referenceName": "AzureSqlDatabaseSEGIP",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
 					"name": "bronze"
 				},
 				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "sup_entregas.csv",
-						"folderPath": "bronze",
-						"fileSystem": "datalake-segip"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
+				"type": "AzureSqlTable",
 				"schema": [
 					{
 						"name": "entrega_id",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "boleta_id",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "ci_beneficiaria",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "establecimiento_id",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "paquete_id",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "paquete_nombre",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "fecha_entrega",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "lote_produccion",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "peso_paquete_kg",
-						"type": "String"
+						"type": "varchar"
 					},
 					{
 						"name": "fecha_proxima_entrega",
-						"type": "String"
+						"type": "varchar"
 					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Datalake_SEGIP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SUP_establecimientos')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Datalake_SEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "bronze"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
+				],
 				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "sup_establecimientos.csv",
-						"folderPath": "bronze",
-						"fileSystem": "datalake-segip"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "establecimiento_id",
-						"type": "String"
-					},
-					{
-						"name": "codigo_snis",
-						"type": "String"
-					},
-					{
-						"name": "nombre",
-						"type": "String"
-					},
-					{
-						"name": "tipo",
-						"type": "String"
-					},
-					{
-						"name": "nivel_atencion",
-						"type": "String"
-					},
-					{
-						"name": "municipio",
-						"type": "String"
-					},
-					{
-						"name": "departamento",
-						"type": "String"
-					},
-					{
-						"name": "red_salud",
-						"type": "String"
-					},
-					{
-						"name": "estado",
-						"type": "String"
-					}
-				]
+					"schema": "bronze",
+					"table": "sup_entregas"
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Datalake_SEGIP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SUP_inscripciones')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Datalake_SEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "bronze"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "sup_inscripciones.csv",
-						"folderPath": "bronze",
-						"fileSystem": "datalake-segip"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "inscripcion_id",
-						"type": "String"
-					},
-					{
-						"name": "ci_beneficiaria",
-						"type": "String"
-					},
-					{
-						"name": "establecimiento_id",
-						"type": "String"
-					},
-					{
-						"name": "fecha_inscripcion",
-						"type": "String"
-					},
-					{
-						"name": "semana_gestacion",
-						"type": "String"
-					},
-					{
-						"name": "estado",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Datalake_SEGIP')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
 			]
 		}
 	]
