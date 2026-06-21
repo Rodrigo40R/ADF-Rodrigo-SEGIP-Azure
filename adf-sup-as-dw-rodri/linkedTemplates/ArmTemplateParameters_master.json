@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-sup-as-dw-rodri"
+		},
+		"AzureSqlDatabaseSEGIP_password": {
+			"value": ""
+		},
+		"Datalake_SEGIP_accountKey": {
+			"value": ""
+		},
+		"AzureSqlDatabaseSEGIP_properties_typeProperties_server": {
+			"value": "server-sup-as-dw-rodri.database.windows.net"
+		},
+		"AzureSqlDatabaseSEGIP_properties_typeProperties_database": {
+			"value": "dw-sup-as-segip"
+		},
+		"AzureSqlDatabaseSEGIP_properties_typeProperties_userName": {
+			"value": "adminRodri"
+		},
+		"Datalake_SEGIP_properties_typeProperties_url": {
+			"value": "https://datalakesupasrodri.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

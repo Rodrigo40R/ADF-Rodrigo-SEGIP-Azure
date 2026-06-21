@@ -1,0 +1,84 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-sup-as-dw-rodri"
+		},
+		"AzureSqlDatabaseSEGIP_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabaseSEGIP'"
+		},
+		"Datalake_SEGIP_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'Datalake_SEGIP'"
+		},
+		"AzureSqlDatabaseSEGIP_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "server-sup-as-dw-rodri.database.windows.net"
+		},
+		"AzureSqlDatabaseSEGIP_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "dw-sup-as-segip"
+		},
+		"AzureSqlDatabaseSEGIP_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "adminRodri"
+		},
+		"Datalake_SEGIP_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://datalakesupasrodri.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "adf-sup-as-dw-rodri_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureSqlDatabaseSEGIP_password": {
+						"value": "[parameters('AzureSqlDatabaseSEGIP_password')]"
+					},
+					"Datalake_SEGIP_accountKey": {
+						"value": "[parameters('Datalake_SEGIP_accountKey')]"
+					},
+					"AzureSqlDatabaseSEGIP_properties_typeProperties_server": {
+						"value": "[parameters('AzureSqlDatabaseSEGIP_properties_typeProperties_server')]"
+					},
+					"AzureSqlDatabaseSEGIP_properties_typeProperties_database": {
+						"value": "[parameters('AzureSqlDatabaseSEGIP_properties_typeProperties_database')]"
+					},
+					"AzureSqlDatabaseSEGIP_properties_typeProperties_userName": {
+						"value": "[parameters('AzureSqlDatabaseSEGIP_properties_typeProperties_userName')]"
+					},
+					"Datalake_SEGIP_properties_typeProperties_url": {
+						"value": "[parameters('Datalake_SEGIP_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
