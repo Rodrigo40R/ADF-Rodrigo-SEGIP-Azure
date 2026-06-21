@@ -1,0 +1,52 @@
+{
+	"name": "bronce_SEGIP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseSEGIP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bronze"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "CI",
+				"type": "varchar"
+			},
+			{
+				"name": "Nombres",
+				"type": "varchar"
+			},
+			{
+				"name": "Ap_Patern",
+				"type": "varchar"
+			},
+			{
+				"name": "Ap_Matern",
+				"type": "varchar"
+			},
+			{
+				"name": "Fecha_Nac",
+				"type": "varchar"
+			},
+			{
+				"name": "Genero",
+				"type": "varchar"
+			},
+			{
+				"name": "Estado_Civ",
+				"type": "varchar"
+			},
+			{
+				"name": "Municipio",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "segip"
+		}
+	}
+}
