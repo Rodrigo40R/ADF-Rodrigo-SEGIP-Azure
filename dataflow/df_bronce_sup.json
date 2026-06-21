@@ -1,0 +1,292 @@
+{
+	"name": "df_bronce_sup",
+	"properties": {
+		"folder": {
+			"name": "bronce"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SUP_boletas",
+						"type": "DatasetReference"
+					},
+					"name": "sourceBoletas"
+				},
+				{
+					"dataset": {
+						"referenceName": "SUP_catalogo_paquetes",
+						"type": "DatasetReference"
+					},
+					"name": "sourceCatalogoPaquetes"
+				},
+				{
+					"dataset": {
+						"referenceName": "SUP_controles",
+						"type": "DatasetReference"
+					},
+					"name": "sourceControles"
+				},
+				{
+					"dataset": {
+						"referenceName": "SUP_entregas",
+						"type": "DatasetReference"
+					},
+					"name": "sourceEntregas"
+				},
+				{
+					"dataset": {
+						"referenceName": "SUP_establecimientos",
+						"type": "DatasetReference"
+					},
+					"name": "sourceEstablecimientos"
+				},
+				{
+					"dataset": {
+						"referenceName": "SUP_inscripciones",
+						"type": "DatasetReference"
+					},
+					"name": "sourceInscripciones"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SUP_bronce_boletas",
+						"type": "DatasetReference"
+					},
+					"name": "sinkBoletas"
+				},
+				{
+					"dataset": {
+						"referenceName": "SUP_bronce_catalogo_paquetes",
+						"type": "DatasetReference"
+					},
+					"name": "sinkCatalogoPaquetes"
+				},
+				{
+					"dataset": {
+						"referenceName": "SUP_bronce_controles",
+						"type": "DatasetReference"
+					},
+					"name": "sinkControles"
+				},
+				{
+					"dataset": {
+						"referenceName": "SUP_bronce_entregas",
+						"type": "DatasetReference"
+					},
+					"name": "sinkEntregas"
+				},
+				{
+					"dataset": {
+						"referenceName": "SUP_bronce_establecimientos",
+						"type": "DatasetReference"
+					},
+					"name": "sinkEstablecimientos"
+				},
+				{
+					"dataset": {
+						"referenceName": "SUP_bronce_inscripciones",
+						"type": "DatasetReference"
+					},
+					"name": "sinkInscripciones"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          boleta_id as string,",
+				"          control_id as string,",
+				"          ci_beneficiaria as string,",
+				"          nro_boleta as string,",
+				"          fecha_emision as string,",
+				"          estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourceBoletas",
+				"source(output(",
+				"          paquete_id as string,",
+				"          nombre as string,",
+				"          contenido as string,",
+				"          peso_estandar_kg as string,",
+				"          costo_estimado_bs as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourceCatalogoPaquetes",
+				"source(output(",
+				"          control_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          semana_gestacion as string,",
+				"          peso_madre_kg as string,",
+				"          presion_arterial as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourceControles",
+				"source(output(",
+				"          entrega_id as string,",
+				"          boleta_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          paquete_id as string,",
+				"          paquete_nombre as string,",
+				"          fecha_entrega as string,",
+				"          lote_produccion as string,",
+				"          peso_paquete_kg as string,",
+				"          fecha_proxima_entrega as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourceEntregas",
+				"source(output(",
+				"          establecimiento_id as string,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string,",
+				"          estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourceEstablecimientos",
+				"source(output(",
+				"          inscripcion_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          fecha_inscripcion as string,",
+				"          semana_gestacion as string,",
+				"          estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourceInscripciones",
+				"sourceBoletas sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          boleta_id as string,",
+				"          control_id as string,",
+				"          ci_beneficiaria as string,",
+				"          nro_boleta as string,",
+				"          fecha_emision as string,",
+				"          estado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkBoletas",
+				"sourceCatalogoPaquetes sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          paquete_id as string,",
+				"          nombre as string,",
+				"          contenido as string,",
+				"          peso_estandar_kg as string,",
+				"          costo_estimado_bs as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkCatalogoPaquetes",
+				"sourceControles sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          control_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          semana_gestacion as string,",
+				"          peso_madre_kg as string,",
+				"          presion_arterial as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkControles",
+				"sourceEntregas sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          entrega_id as string,",
+				"          boleta_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          paquete_id as string,",
+				"          paquete_nombre as string,",
+				"          fecha_entrega as string,",
+				"          lote_produccion as string,",
+				"          peso_paquete_kg as string,",
+				"          fecha_proxima_entrega as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkEntregas",
+				"sourceEstablecimientos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          establecimiento_id as string,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string,",
+				"          estado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkEstablecimientos",
+				"sourceInscripciones sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          inscripcion_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          fecha_inscripcion as string,",
+				"          semana_gestacion as string,",
+				"          estado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkInscripciones"
+			]
+		}
+	}
+}

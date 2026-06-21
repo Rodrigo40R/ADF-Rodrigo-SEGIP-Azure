@@ -6,11 +6,298 @@
 		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [],
-			"sinks": [],
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "BJA_controles_pediatricos",
+						"type": "DatasetReference"
+					},
+					"name": "sourceControlesPediatricos"
+				},
+				{
+					"dataset": {
+						"referenceName": "BJA_controles_prenatales",
+						"type": "DatasetReference"
+					},
+					"name": "sourceControlesPrenatales"
+				},
+				{
+					"dataset": {
+						"referenceName": "BJA_establecimiento_salud",
+						"type": "DatasetReference"
+					},
+					"name": "sourceEstablecimientoSalud"
+				},
+				{
+					"dataset": {
+						"referenceName": "BJA_inscripciones",
+						"type": "DatasetReference"
+					},
+					"name": "sourceInscripciones"
+				},
+				{
+					"dataset": {
+						"referenceName": "BJA_pagos",
+						"type": "DatasetReference"
+					},
+					"name": "sourcePagos"
+				},
+				{
+					"dataset": {
+						"referenceName": "BJA_partos",
+						"type": "DatasetReference"
+					},
+					"name": "sourcePartos"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "BJA_bronce_controles_pediatricos",
+						"type": "DatasetReference"
+					},
+					"name": "sinkControlesPediatricos"
+				},
+				{
+					"dataset": {
+						"referenceName": "BJA_bronce_controles_prenatales",
+						"type": "DatasetReference"
+					},
+					"name": "sinkControlesPrenatales"
+				},
+				{
+					"dataset": {
+						"referenceName": "BJA_bronce_establecimientos_salud",
+						"type": "DatasetReference"
+					},
+					"name": "sinkEstablecimientoSalud"
+				},
+				{
+					"dataset": {
+						"referenceName": "BJA_bronce_inscripciones",
+						"type": "DatasetReference"
+					},
+					"name": "sinkInscripciones"
+				},
+				{
+					"dataset": {
+						"referenceName": "BJA_bronce_pagos",
+						"type": "DatasetReference"
+					},
+					"name": "sinkPagos"
+				},
+				{
+					"dataset": {
+						"referenceName": "BJA_bronce_partos",
+						"type": "DatasetReference"
+					},
+					"name": "sinkPartos"
+				}
+			],
 			"transformations": [],
 			"scriptLines": [
-				""
+				"source(output(",
+				"          control_pediatrico_id as string,",
+				"          ci_nino as string,",
+				"          ci_madre as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          peso_nino_kg as string,",
+				"          talla_nino_cm as string,",
+				"          vacuna_aplicada as string,",
+				"          resultado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourceControlesPediatricos",
+				"source(output(",
+				"          control_prenatal_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          semana_gestacion as string,",
+				"          peso_madre_kg as string,",
+				"          presion_arterial as string,",
+				"          resultado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourceControlesPrenatales",
+				"source(output(",
+				"          establecimiento_id as string,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string,",
+				"          estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourceEstablecimientoSalud",
+				"source(output(",
+				"          inscripcion_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          fecha_inscripcion as string,",
+				"          semana_gestacion as string,",
+				"          estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourceInscripciones",
+				"source(output(",
+				"          pago_id as string,",
+				"          ci_beneficiaria as string,",
+				"          concepto_pago as string,",
+				"          monto_bs as string,",
+				"          fecha_pago as string,",
+				"          estado_pago as string,",
+				"          canal_pago as string,",
+				"          nro_comprobante as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourcePagos",
+				"source(output(",
+				"          parto_id as string,",
+				"          ci_madre as string,",
+				"          ci_recien_nacido as string,",
+				"          establecimiento_id as string,",
+				"          fecha_parto as string,",
+				"          tipo_parto as string,",
+				"          peso_nacimiento_kg as string,",
+				"          talla_nacimiento_cm as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourcePartos",
+				"sourceControlesPediatricos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          control_pediatrico_id as string,",
+				"          ci_nino as string,",
+				"          ci_madre as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          peso_nino_kg as string,",
+				"          talla_nino_cm as string,",
+				"          vacuna_aplicada as string,",
+				"          resultado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkControlesPediatricos",
+				"sourceControlesPrenatales sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          control_prenatal_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          semana_gestacion as string,",
+				"          peso_madre_kg as string,",
+				"          presion_arterial as string,",
+				"          resultado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkControlesPrenatales",
+				"sourceEstablecimientoSalud sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          establecimiento_id as string,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string,",
+				"          estado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkEstablecimientoSalud",
+				"sourceInscripciones sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          inscripcion_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          fecha_inscripcion as string,",
+				"          semana_gestacion as string,",
+				"          estado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkInscripciones",
+				"sourcePagos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          pago_id as string,",
+				"          ci_beneficiaria as string,",
+				"          concepto_pago as string,",
+				"          monto_bs as string,",
+				"          fecha_pago as string,",
+				"          estado_pago as string,",
+				"          canal_pago as string,",
+				"          nro_comprobante as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkPagos",
+				"sourcePartos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          parto_id as string,",
+				"          ci_madre as string,",
+				"          ci_recien_nacido as string,",
+				"          establecimiento_id as string,",
+				"          fecha_parto as string,",
+				"          tipo_parto as string,",
+				"          peso_nacimiento_kg as string,",
+				"          talla_nacimiento_cm as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkPartos"
 			]
 		}
 	}
