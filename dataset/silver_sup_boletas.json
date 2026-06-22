@@ -1,0 +1,44 @@
+{
+	"name": "silver_sup_boletas",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseSEGIP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "boleta_id",
+				"type": "varchar"
+			},
+			{
+				"name": "control_id",
+				"type": "varchar"
+			},
+			{
+				"name": "ci_beneficiaria",
+				"type": "varchar"
+			},
+			{
+				"name": "nro_boleta",
+				"type": "varchar"
+			},
+			{
+				"name": "fecha_emision",
+				"type": "varchar"
+			},
+			{
+				"name": "estado",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "sup_boletas"
+		}
+	}
+}

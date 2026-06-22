@@ -1,0 +1,44 @@
+{
+	"name": "silver_sup_inscripciones",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseSEGIP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "inscripcion_id",
+				"type": "varchar"
+			},
+			{
+				"name": "ci_beneficiaria",
+				"type": "varchar"
+			},
+			{
+				"name": "establecimiento_id",
+				"type": "varchar"
+			},
+			{
+				"name": "fecha_inscripcion",
+				"type": "varchar"
+			},
+			{
+				"name": "semana_gestacion",
+				"type": "varchar"
+			},
+			{
+				"name": "estado",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "sup_inscripciones"
+		}
+	}
+}

@@ -1,0 +1,60 @@
+{
+	"name": "silver_bja_controles_pediatricos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseSEGIP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "control_pediatrico_id",
+				"type": "varchar"
+			},
+			{
+				"name": "ci_nino",
+				"type": "varchar"
+			},
+			{
+				"name": "ci_madre",
+				"type": "varchar"
+			},
+			{
+				"name": "establecimiento_id",
+				"type": "varchar"
+			},
+			{
+				"name": "nro_control",
+				"type": "varchar"
+			},
+			{
+				"name": "fecha_control",
+				"type": "varchar"
+			},
+			{
+				"name": "peso_nino_kg",
+				"type": "varchar"
+			},
+			{
+				"name": "talla_nino_cm",
+				"type": "varchar"
+			},
+			{
+				"name": "vacuna_aplicada",
+				"type": "varchar"
+			},
+			{
+				"name": "resultado",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "bja_controles_pediatricos"
+		}
+	}
+}

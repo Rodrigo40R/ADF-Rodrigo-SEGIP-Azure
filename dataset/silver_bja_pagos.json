@@ -1,0 +1,52 @@
+{
+	"name": "silver_bja_pagos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseSEGIP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "pago_id",
+				"type": "varchar"
+			},
+			{
+				"name": "ci_beneficiaria",
+				"type": "varchar"
+			},
+			{
+				"name": "concepto_pago",
+				"type": "varchar"
+			},
+			{
+				"name": "monto_bs",
+				"type": "varchar"
+			},
+			{
+				"name": "fecha_pago",
+				"type": "varchar"
+			},
+			{
+				"name": "estado_pago",
+				"type": "varchar"
+			},
+			{
+				"name": "canal_pago",
+				"type": "varchar"
+			},
+			{
+				"name": "nro_comprobante",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "bja_pagos"
+		}
+	}
+}

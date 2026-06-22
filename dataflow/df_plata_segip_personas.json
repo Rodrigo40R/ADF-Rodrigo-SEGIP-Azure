@@ -1,0 +1,55 @@
+{
+	"name": "df_plata_segip_personas",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "bronce_SEGIP",
+						"type": "DatasetReference"
+					},
+					"name": "bronceSegip"
+				}
+			],
+			"sinks": [
+				{
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "LimpiezaSegip"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          CI as string,",
+				"          Nombres as string,",
+				"          Ap_Patern as string,",
+				"          Ap_Matern as string,",
+				"          Fecha_Nac as string,",
+				"          Genero as string,",
+				"          Estado_Civ as string,",
+				"          Municipio as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT \\n    TRIM(CI) AS CI,\\n    TRIM(Nombres) AS Nombres,\\n    TRIM(Ap_Patern) AS Ap_Patern,\\n    TRIM(Ap_Matern) AS Ap_Matern,\\n    TRIM(Fecha_Nac) AS Fecha_Nac,\\n    TRIM(Genero) AS Genero,\\n    TRIM(Estado_Civ) AS Estado_Civ,\\n    TRIM(Municipio) AS Municipio\\nFROM bronze.segip\\nWHERE CI IS NOT NULL AND TRIM(CI) <> \\'\\'',",
+				"     format: 'query') ~> bronceSegip",
+				"bronceSegip derive(Nombres = initCap(Nombres),",
+				"          Ap_Patern = initCap(Ap_Patern),",
+				"          Ap_Matern = initCap(Ap_Matern),",
+				"          Fecha_Nac = toDate(Fecha_Nac, 'dd/MM/yyyy')) ~> LimpiezaSegip",
+				"LimpiezaSegip sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}
