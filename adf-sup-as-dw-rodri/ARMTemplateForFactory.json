@@ -5529,6 +5529,383 @@
 				"[concat(variables('factoryId'), '/datasets/silver_SEGIP')]",
 				"[concat(variables('factoryId'), '/datasets/oro_Dim_Persona')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_gold_dim_establecimiento')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "silver_bja_establecimientos_salud",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "oro_Dim_Establecimiento",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          establecimiento_id as string,",
+						"          codigo_snis as string,",
+						"          nombre as string,",
+						"          tipo as string,",
+						"          nivel_atencion as string,",
+						"          municipio as string,",
+						"          departamento as string,",
+						"          red_salud as string,",
+						"          estado as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 aggregate(groupBy(establecimiento_id),",
+						"     codigo_snis = first(codigo_snis),",
+						"          nombre = first(nombre),",
+						"          tipo = first(tipo),",
+						"          nivel_atencion = first(nivel_atencion),",
+						"          municipio = first(municipio),",
+						"          departamento = first(departamento),",
+						"          red_salud = first(red_salud)) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          id_establecimiento as integer,",
+						"          codigo_snis as string,",
+						"          nombre as string,",
+						"          tipo as string,",
+						"          nivel_atencion as string,",
+						"          municipio as string,",
+						"          departamento as string,",
+						"          red_salud as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          codigo_snis,",
+						"          nombre,",
+						"          tipo,",
+						"          nivel_atencion,",
+						"          municipio,",
+						"          departamento,",
+						"          red_salud,",
+						"          id_establecimiento = establecimiento_id",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/silver_bja_establecimientos_salud')]",
+				"[concat(variables('factoryId'), '/datasets/oro_Dim_Establecimiento')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_gold_dim_paquete')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "silver_sup_catalogo_paquetes",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "oro_Dim_Paquete",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          paquete_id as string,",
+						"          nombre as string,",
+						"          contenido as string,",
+						"          peso_estandar as string,",
+						"          costo_estimado_bs as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 aggregate(groupBy(paquete_id),",
+						"     nombre = first(nombre),",
+						"          contenido = first(contenido),",
+						"          peso_estandar = first(peso_estandar),",
+						"          costo_estimado_bs = first(costo_estimado_bs)) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          id_paquete as integer,",
+						"          nombre as string,",
+						"          contenido as string,",
+						"          peso_estandar_kg as decimal(10,2),",
+						"          costo_estimado_bs as decimal(10,2)",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          nombre,",
+						"          contenido,",
+						"          id_paquete = paquete_id,",
+						"          peso_estandar_kg = peso_estandar,",
+						"          costo_estimado_bs",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/silver_sup_catalogo_paquetes')]",
+				"[concat(variables('factoryId'), '/datasets/oro_Dim_Paquete')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_gold_hechos_controles')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "silver_bja_controles_prenatales",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "oro_Hechos_Controles",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						},
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          control_prenatal_id as string,",
+						"          ci_beneficiaria as string,",
+						"          establecimiento_id as string,",
+						"          nro_control as string,",
+						"          fecha_control as string,",
+						"          semana_gestacion as string,",
+						"          peso_madre_kg as string,",
+						"          presion_arterial as string,",
+						"          resultado as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 aggregate(groupBy(control_prenatal_id),",
+						"     ci_beneficiaria = first(ci_beneficiaria),",
+						"          establecimiento_id = first(establecimiento_id),",
+						"          fecha_control = first(fecha_control),",
+						"          nro_control = first(nro_control),",
+						"          semana_gestacion = first(semana_gestacion),",
+						"          peso_madre_kg = first(peso_madre_kg),",
+						"          presion_arterial = first(presion_arterial)) ~> aggregate1",
+						"aggregate1 derive(id_fecha = fecha_control,",
+						"          peso_medido = peso_madre_kg,",
+						"          resultado_o_presion = presion_arterial,",
+						"          tipo_programa = 'BJA') ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          id_hecho_control as integer,",
+						"          ci_beneficiaria as string,",
+						"          id_establecimiento as integer,",
+						"          id_fecha as date,",
+						"          nro_control as integer,",
+						"          semana_gestacion as integer,",
+						"          peso_medido as decimal(10,2),",
+						"          resultado_o_presion as string,",
+						"          tipo_programa as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          ci_beneficiaria,",
+						"          resultado_o_presion,",
+						"          tipo_programa,",
+						"          id_establecimiento = establecimiento_id,",
+						"          id_fecha,",
+						"          nro_control,",
+						"          semana_gestacion,",
+						"          peso_medido",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/silver_bja_controles_prenatales')]",
+				"[concat(variables('factoryId'), '/datasets/oro_Hechos_Controles')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_gold_hechos_pagos')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "silver_bja_pagos",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "oro_Hechos_Pagos",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						},
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          pago_id as string,",
+						"          ci_beneficiaria as string,",
+						"          concepto_pago as string,",
+						"          monto_bs as string,",
+						"          fecha_pago as string,",
+						"          estado_pago as string,",
+						"          canal_pago as string,",
+						"          nro_comprobante as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"derivedColumn1 aggregate(groupBy(pago_id),",
+						"     ci_beneficiaria = first(ci_beneficiaria),",
+						"          id_fecha = first(fecha_pago),",
+						"          concepto_pago = first(fecha_pago),",
+						"          monto_bs = first(monto_bs),",
+						"          estado_pago = first(estado_pago),",
+						"          canal_pago = first(canal_pago)) ~> aggregate1",
+						"source1 derive(id_fecha = fecha_pago) ~> derivedColumn1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          id_pago as integer,",
+						"          ci_beneficiaria as string,",
+						"          id_fecha as date,",
+						"          concepto_pago as string,",
+						"          monto_bs as decimal(10,2),",
+						"          estado_pago as string,",
+						"          canal_pago as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          ci_beneficiaria,",
+						"          concepto_pago,",
+						"          estado_pago,",
+						"          canal_pago,",
+						"          id_fecha,",
+						"          monto_bs",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/silver_bja_pagos')]",
+				"[concat(variables('factoryId'), '/datasets/oro_Hechos_Pagos')]"
+			]
 		}
 	]
 }
