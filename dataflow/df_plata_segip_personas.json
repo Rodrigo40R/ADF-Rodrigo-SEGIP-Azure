@@ -17,6 +17,10 @@
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "silver_SEGIP",
+						"type": "DatasetReference"
+					},
 					"name": "sink1"
 				}
 			],
@@ -47,8 +51,35 @@
 				"          Fecha_Nac = toDate(Fecha_Nac, 'dd/MM/yyyy')) ~> LimpiezaSegip",
 				"LimpiezaSegip sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          CI as string,",
+				"          Nombres as string,",
+				"          Ap_Patern as string,",
+				"          Ap_Matern as string,",
+				"          Fecha_Nac as string,",
+				"          Genero as string,",
+				"          Estado_Civ as string,",
+				"          Municipio as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          CI,",
+				"          Nombres,",
+				"          Ap_Patern,",
+				"          Ap_Matern,",
+				"          Genero,",
+				"          Estado_Civ,",
+				"          Municipio,",
+				"          Fecha_Nac",
+				"     )) ~> sink1"
 			]
 		}
 	}
