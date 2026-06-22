@@ -1,0 +1,89 @@
+{
+	"name": "df_gold_hechos_pagos",
+	"properties": {
+		"folder": {
+			"name": "gold"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "silver_bja_pagos",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "oro_Hechos_Pagos",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          pago_id as string,",
+				"          ci_beneficiaria as string,",
+				"          concepto_pago as string,",
+				"          monto_bs as string,",
+				"          fecha_pago as string,",
+				"          estado_pago as string,",
+				"          canal_pago as string,",
+				"          nro_comprobante as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"derivedColumn1 aggregate(groupBy(pago_id),",
+				"     ci_beneficiaria = first(ci_beneficiaria),",
+				"          id_fecha = first(fecha_pago),",
+				"          concepto_pago = first(fecha_pago),",
+				"          monto_bs = first(monto_bs),",
+				"          estado_pago = first(estado_pago),",
+				"          canal_pago = first(canal_pago)) ~> aggregate1",
+				"source1 derive(id_fecha = fecha_pago) ~> derivedColumn1",
+				"aggregate1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id_pago as integer,",
+				"          ci_beneficiaria as string,",
+				"          id_fecha as date,",
+				"          concepto_pago as string,",
+				"          monto_bs as decimal(10,2),",
+				"          estado_pago as string,",
+				"          canal_pago as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ci_beneficiaria,",
+				"          concepto_pago,",
+				"          estado_pago,",
+				"          canal_pago,",
+				"          id_fecha,",
+				"          monto_bs",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

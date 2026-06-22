@@ -1,0 +1,77 @@
+{
+	"name": "df_gold_dim_paquete",
+	"properties": {
+		"folder": {
+			"name": "gold"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "silver_sup_catalogo_paquetes",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "oro_Dim_Paquete",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "aggregate1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          paquete_id as string,",
+				"          nombre as string,",
+				"          contenido as string,",
+				"          peso_estandar as string,",
+				"          costo_estimado_bs as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 aggregate(groupBy(paquete_id),",
+				"     nombre = first(nombre),",
+				"          contenido = first(contenido),",
+				"          peso_estandar = first(peso_estandar),",
+				"          costo_estimado_bs = first(costo_estimado_bs)) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id_paquete as integer,",
+				"          nombre as string,",
+				"          contenido as string,",
+				"          peso_estandar_kg as decimal(10,2),",
+				"          costo_estimado_bs as decimal(10,2)",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          nombre,",
+				"          contenido,",
+				"          id_paquete = paquete_id,",
+				"          peso_estandar_kg = peso_estandar,",
+				"          costo_estimado_bs",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

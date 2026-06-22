@@ -1,0 +1,97 @@
+{
+	"name": "df_gold_hechos_controles",
+	"properties": {
+		"folder": {
+			"name": "gold"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "silver_bja_controles_prenatales",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "oro_Hechos_Controles",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          control_prenatal_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          semana_gestacion as string,",
+				"          peso_madre_kg as string,",
+				"          presion_arterial as string,",
+				"          resultado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 aggregate(groupBy(control_prenatal_id),",
+				"     ci_beneficiaria = first(ci_beneficiaria),",
+				"          establecimiento_id = first(establecimiento_id),",
+				"          fecha_control = first(fecha_control),",
+				"          nro_control = first(nro_control),",
+				"          semana_gestacion = first(semana_gestacion),",
+				"          peso_madre_kg = first(peso_madre_kg),",
+				"          presion_arterial = first(presion_arterial)) ~> aggregate1",
+				"aggregate1 derive(id_fecha = fecha_control,",
+				"          peso_medido = peso_madre_kg,",
+				"          resultado_o_presion = presion_arterial,",
+				"          tipo_programa = 'BJA') ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id_hecho_control as integer,",
+				"          ci_beneficiaria as string,",
+				"          id_establecimiento as integer,",
+				"          id_fecha as date,",
+				"          nro_control as integer,",
+				"          semana_gestacion as integer,",
+				"          peso_medido as decimal(10,2),",
+				"          resultado_o_presion as string,",
+				"          tipo_programa as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ci_beneficiaria,",
+				"          resultado_o_presion,",
+				"          tipo_programa,",
+				"          id_establecimiento = establecimiento_id,",
+				"          id_fecha,",
+				"          nro_control,",
+				"          semana_gestacion,",
+				"          peso_medido",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
