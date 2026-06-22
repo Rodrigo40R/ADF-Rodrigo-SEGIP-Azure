@@ -1,0 +1,53 @@
+{
+	"name": "oro_Dim_Establecimiento",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseSEGIP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id_establecimiento",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "codigo_snis",
+				"type": "nvarchar"
+			},
+			{
+				"name": "nombre",
+				"type": "nvarchar"
+			},
+			{
+				"name": "tipo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "nivel_atencion",
+				"type": "nvarchar"
+			},
+			{
+				"name": "municipio",
+				"type": "nvarchar"
+			},
+			{
+				"name": "departamento",
+				"type": "nvarchar"
+			},
+			{
+				"name": "red_salud",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "oro",
+			"table": "Dim_Establecimiento"
+		}
+	}
+}

@@ -1,0 +1,53 @@
+{
+	"name": "oro_Hechos_Entregas",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseSEGIP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id_hecho_entrega",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ci_beneficiaria",
+				"type": "nvarchar"
+			},
+			{
+				"name": "id_establecimiento",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "id_paquete",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "id_fecha",
+				"type": "date"
+			},
+			{
+				"name": "lote_produccion",
+				"type": "nvarchar"
+			},
+			{
+				"name": "peso_entregado",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 2
+			}
+		],
+		"typeProperties": {
+			"schema": "oro",
+			"table": "Hechos_Entregas"
+		}
+	}
+}

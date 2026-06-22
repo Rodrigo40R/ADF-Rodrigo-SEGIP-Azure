@@ -1,0 +1,52 @@
+{
+	"name": "oro_Dim_Tiempo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseSEGIP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id_fecha",
+				"type": "date"
+			},
+			{
+				"name": "año",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "mes",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "dia",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "trimestre",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "nombre_mes",
+				"type": "nvarchar"
+			},
+			{
+				"name": "nombre_dia",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "oro",
+			"table": "Dim_Tiempo"
+		}
+	}
+}

@@ -1,0 +1,62 @@
+{
+	"name": "oro_Hechos_Controles",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseSEGIP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id_hecho_control",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ci_beneficiaria",
+				"type": "nvarchar"
+			},
+			{
+				"name": "id_establecimiento",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "id_fecha",
+				"type": "date"
+			},
+			{
+				"name": "nro_control",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "semana_gestacion",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "peso_medido",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 2
+			},
+			{
+				"name": "resultado_o_presion",
+				"type": "nvarchar"
+			},
+			{
+				"name": "tipo_programa",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "oro",
+			"table": "Hechos_Controles"
+		}
+	}
+}

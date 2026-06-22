@@ -1,0 +1,51 @@
+{
+	"name": "oro_Hechos_Pagos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseSEGIP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id_pago",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ci_beneficiaria",
+				"type": "nvarchar"
+			},
+			{
+				"name": "id_fecha",
+				"type": "date"
+			},
+			{
+				"name": "concepto_pago",
+				"type": "nvarchar"
+			},
+			{
+				"name": "monto_bs",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 2
+			},
+			{
+				"name": "estado_pago",
+				"type": "nvarchar"
+			},
+			{
+				"name": "canal_pago",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "oro",
+			"table": "Hechos_Pagos"
+		}
+	}
+}

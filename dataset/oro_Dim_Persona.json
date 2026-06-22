@@ -1,0 +1,40 @@
+{
+	"name": "oro_Dim_Persona",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseSEGIP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ci_beneficiaria",
+				"type": "nvarchar"
+			},
+			{
+				"name": "nombres",
+				"type": "nvarchar"
+			},
+			{
+				"name": "apellidos",
+				"type": "nvarchar"
+			},
+			{
+				"name": "fecha_nacimiento",
+				"type": "date"
+			},
+			{
+				"name": "estado_civil",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "oro",
+			"table": "Dim_Persona"
+		}
+	}
+}
