@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "DF_silver_Segip",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
