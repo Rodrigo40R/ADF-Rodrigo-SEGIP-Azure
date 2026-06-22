@@ -1,0 +1,90 @@
+{
+	"name": "df_plata_sup_controles",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SUP_bronce_controles",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "silver_sup_controles",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          control_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          semana_gestacion as string,",
+				"          peso_madre_kg as string,",
+				"          presion_arterial as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT \\n    TRIM(control_id) AS control_id,\\n    TRIM(ci_beneficiaria) AS ci_beneficiaria,\\n    TRIM(establecimiento_id) AS establecimiento_id,\\n    TRIM(nro_control) AS nro_control,\\n    TRIM(fecha_control) AS fecha_control,\\n    TRIM(semana_gestacion) AS semana_gestacion,\\n    TRIM(peso_madre_kg) AS peso_madre_kg,\\n    TRIM(presion_arterial) AS presion_arterial\\nFROM bronze.sup_controles\\nWHERE control_id IS NOT NULL AND TRIM(control_id) <> \\'\\'',",
+				"     format: 'query') ~> source1",
+				"source1 derive(fecha_control = coalesce(toDate(fecha_control, 'yyyy-MM-dd'), toDate(fecha_control, 'MM/dd/yyyy'), toDate(fecha_control, 'dd/MM/yyyy')),",
+				"          ci_beneficiaria = replace(ci_beneficiaria, '-', ''),",
+				"          peso_madre_kg = toDecimal(coalesce(peso_madre_kg, '0')),",
+				"          presion_arterial = coalesce(presion_arterial, 'No Registrado'),",
+				"          control_id = toInteger(control_id),",
+				"          establecimiento_id = toInteger(establecimiento_id),",
+				"          nro_control = toInteger(nro_control),",
+				"          semana_gestacion = toInteger(semana_gestacion)) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          control_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          semana_gestacion as string,",
+				"          peso_madre as string,",
+				"          presion_arterial as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ci_beneficiaria,",
+				"          presion_arterial,",
+				"          control_id,",
+				"          establecimiento_id,",
+				"          nro_control,",
+				"          fecha_control,",
+				"          semana_gestacion,",
+				"          peso_madre = peso_madre_kg",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
