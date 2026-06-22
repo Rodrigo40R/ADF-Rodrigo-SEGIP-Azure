@@ -1,0 +1,81 @@
+{
+	"name": "df_plata_sup_boletas",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SUP_bronce_boletas",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "silver_sup_boletas",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          boleta_id as string,",
+				"          control_id as string,",
+				"          ci_beneficiaria as string,",
+				"          nro_boleta as string,",
+				"          fecha_emision as string,",
+				"          estado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT \\n    TRIM(boleta_id) AS boleta_id,\\n    TRIM(control_id) AS control_id,\\n    TRIM(ci_beneficiaria) AS ci_beneficiaria,\\n    TRIM(nro_boleta) AS nro_boleta,\\n    TRIM(fecha_emision) AS fecha_emision,\\n    TRIM(estado) AS estado\\nFROM bronze.sup_boletas\\nWHERE boleta_id IS NOT NULL AND TRIM(boleta_id) <> \\'\\'',",
+				"     format: 'query') ~> source1",
+				"source1 derive(ci_beneficiaria = replace(ci_beneficiaria, '-', ''),",
+				"          fecha_emision = coalesce(toDate(fecha_emision, 'yyyy-MM-dd'), toDate(fecha_emision, 'MM/dd/yyyy'), toDate(fecha_emision, 'dd/MM/yyyy')),",
+				"          estado = upper(estado),",
+				"          boleta_id = toInteger(boleta_id),",
+				"          control_id = toInteger(control_id)) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          boleta_id as string,",
+				"          control_id as string,",
+				"          ci_beneficiaria as string,",
+				"          nro_boleta as string,",
+				"          fecha_emision as string,",
+				"          estado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ci_beneficiaria,",
+				"          nro_boleta,",
+				"          estado,",
+				"          boleta_id,",
+				"          fecha_emision,",
+				"          control_id",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

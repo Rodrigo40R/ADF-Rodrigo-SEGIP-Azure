@@ -1,0 +1,102 @@
+{
+	"name": "df_plata_sup_establecimientos",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SUP_bronce_establecimientos",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "silver_sup_establecimientos",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          establecimiento_id as string,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT \\n    TRIM(establecimiento_id) AS establecimiento_id,\\n    TRIM(codigo_snis) AS codigo_snis,\\n    TRIM(nombre) AS nombre,\\n    TRIM(tipo) AS tipo,\\n    TRIM(nivel_atencion) AS nivel_atencion,\\n    TRIM(municipio) AS municipio,\\n    TRIM(departamento) AS departamento,\\n    TRIM(red_salud) AS red_salud\\nFROM bronze.sup_establecimientos\\nWHERE establecimiento_id IS NOT NULL AND TRIM(establecimiento_id) <> \\'\\'',",
+				"     format: 'query') ~> source1",
+				"source1 derive(establecimiento_id = toInteger(establecimiento_id),",
+				"          codigo_snis = upper(codigo_snis),",
+				"          nombre = initCap(nombre),",
+				"          tipo = initCap(tipo),",
+				"          nivel_atencion = initCap(nivel_atencion),",
+				"          municipio = initCap(municipio),",
+				"          red_salud = initCap(red_salud),",
+				"          departamento = case(\r",
+				"    upper(departamento) == 'LP', 'La Paz',\r",
+				"    upper(departamento) == 'CBBA' || upper(departamento) == 'CB', 'Cochabamba',\r",
+				"    upper(departamento) == 'SCZ', 'Santa Cruz',\r",
+				"    upper(departamento) == 'OR', 'Oruro',\r",
+				"    upper(departamento) == 'PT', 'Potosí',\r",
+				"    upper(departamento) == 'TJ', 'Tarija',\r",
+				"    upper(departamento) == 'CH', 'Chuquisaca',\r",
+				"    upper(departamento) == 'BN', 'Beni',\r",
+				"    upper(departamento) == 'PA', 'Pando',\r",
+				"    initCap(departamento)\r",
+				")) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          establecimiento_id as string,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string,",
+				"          estado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          codigo_snis,",
+				"          nombre,",
+				"          tipo,",
+				"          nivel_atencion,",
+				"          municipio,",
+				"          departamento,",
+				"          red_salud,",
+				"          establecimiento_id",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

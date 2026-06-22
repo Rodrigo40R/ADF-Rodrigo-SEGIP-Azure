@@ -1,0 +1,78 @@
+{
+	"name": "df_plata_sup_catalogo_paquetes",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SUP_bronce_catalogo_paquetes",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "silver_sup_catalogo_paquetes",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          paquete_id as string,",
+				"          nombre as string,",
+				"          contenido as string,",
+				"          peso_estandar_kg as string,",
+				"          costo_estimado_bs as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT \\n    TRIM(paquete_id) AS paquete_id,\\n    TRIM(nombre) AS nombre,\\n    TRIM(contenido) AS contenido,\\n    TRIM(peso_estandar_kg) AS peso_estandar_kg,\\n    TRIM(costo_estimado_bs) AS costo_estimado_bs\\nFROM bronze.sup_catalogo_paquetes\\nWHERE paquete_id IS NOT NULL AND TRIM(paquete_id) <> \\'\\'',",
+				"     format: 'query') ~> source1",
+				"source1 derive(peso_estandar_kg = toDecimal(peso_estandar_kg),",
+				"          costo_estimado_bs = toDecimal(costo_estimado_bs),",
+				"          nombre = initCap(nombre),",
+				"          contenido = initCap(contenido),",
+				"          paquete_id = toInteger(paquete_id)) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          paquete_id as string,",
+				"          nombre as string,",
+				"          contenido as string,",
+				"          peso_estandar as string,",
+				"          costo_estimado_bs as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          nombre,",
+				"          contenido,",
+				"          paquete_id,",
+				"          peso_estandar = peso_estandar_kg,",
+				"          costo_estimado_bs",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
