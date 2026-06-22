@@ -1,0 +1,86 @@
+{
+	"name": "df_gold_dim_persona",
+	"properties": {
+		"folder": {
+			"name": "gold"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "silver_SEGIP",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "oro_Dim_Persona",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          CI as string,",
+				"          Nombres as string,",
+				"          Ap_Patern as string,",
+				"          Ap_Matern as string,",
+				"          Genero as string,",
+				"          Estado_Civ as string,",
+				"          Municipio as string,",
+				"          Fecha_Nac as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 aggregate(groupBy(CI),",
+				"     Nombres = first(Nombres),",
+				"          Ap_Patern = first(Ap_Patern),",
+				"          Ap_Matern = first(Ap_Matern),",
+				"          Fecha_Nac = first(Fecha_Nac),",
+				"          Genero = first(Genero),",
+				"          Estado_Civ = first({Estado_Civ})) ~> aggregate1",
+				"aggregate1 derive(apellidos_completos = concatWS(' ', Ap_Patern, Ap_Matern)) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ci_beneficiaria as string,",
+				"          nombres as string,",
+				"          apellidos as string,",
+				"          fecha_nacimiento as date,",
+				"          estado_civil as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          nombres = Nombres,",
+				"          ci_beneficiaria = CI,",
+				"          estado_civil = Estado_Civ,",
+				"          fecha_nacimiento = Fecha_Nac,",
+				"          apellidos = apellidos_completos",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
