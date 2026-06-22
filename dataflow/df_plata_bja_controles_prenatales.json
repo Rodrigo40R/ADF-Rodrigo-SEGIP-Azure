@@ -1,0 +1,94 @@
+{
+	"name": "df_plata_bja_controles_prenatales",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "BJA_bronce_controles_prenatales",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "silver_bja_controles_prenatales",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "limpiezaSilver"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          control_prenatal_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          semana_gestacion as string,",
+				"          peso_madre_kg as string,",
+				"          presion_arterial as string,",
+				"          resultado as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT \\n    TRIM(control_prenatal_id) AS control_prenatal_id,\\n    TRIM(ci_beneficiaria) AS ci_beneficiaria,\\n    TRIM(establecimiento_id) AS establecimiento_id,\\n    TRIM(nro_control) AS nro_control,\\n    TRIM(fecha_control) AS fecha_control,\\n    TRIM(semana_gestacion) AS semana_gestacion,\\n    TRIM(peso_madre_kg) AS peso_madre_kg,\\n    TRIM(presion_arterial) AS presion_arterial,\\n    TRIM(resultado) AS resultado\\nFROM bronze.bja_controles_prenatales\\nWHERE control_prenatal_id IS NOT NULL AND TRIM(control_prenatal_id) <> \\'\\'',",
+				"     format: 'query') ~> source1",
+				"source1 derive(ci_beneficiaria = replace(ci_beneficiaria, '-', ''),",
+				"          fecha_control = toDate(fecha_control, 'yyyy-MM-dd'),",
+				"          peso_madre_kg = toDecimal(peso_madre_kg),",
+				"          presion_arterial = coalesce(presion_arterial, 'No Registrado'),",
+				"          resultado = replace(replace(initCap(coalesce(resultado, 'Sin Resultado')), 'Riesqoo', 'Riesgo'), 'Riesqo', 'Riesgo'),",
+				"          semana_gestacion = toInteger(coalesce(semana_gestacion, '0')),",
+				"          control_prenatal_id = toInteger(control_prenatal_id),",
+				"          establecimiento_id = toInteger(establecimiento_id),",
+				"          nro_control = toInteger(nro_control)) ~> limpiezaSilver",
+				"limpiezaSilver sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          control_prenatal_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as string,",
+				"          fecha_control as string,",
+				"          semana_gestacion as string,",
+				"          peso_madre_kg as string,",
+				"          presion_arterial as string,",
+				"          resultado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ci_beneficiaria,",
+				"          presion_arterial,",
+				"          resultado,",
+				"          control_prenatal_id,",
+				"          establecimiento_id,",
+				"          nro_control,",
+				"          semana_gestacion,",
+				"          peso_madre_kg,",
+				"          fecha_control",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
