@@ -859,6 +859,107 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/df_plata_bja_controles_pediatricos')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "BJA_bronce_controles_pediatricos",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "silver_bja_controles_pediatricos",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "limpiezaBronce"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          control_pediatrico_id as string,",
+						"          ci_nino as string,",
+						"          ci_madre as string,",
+						"          establecimiento_id as string,",
+						"          nro_control as string,",
+						"          fecha_control as string,",
+						"          peso_nino_kg as string,",
+						"          talla_nino_cm as string,",
+						"          vacuna_aplicada as string,",
+						"          resultado as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     query: 'SELECT \\n    TRIM(control_pediatrico_id) AS control_pediatrico_id,\\n    TRIM(ci_nino) AS ci_nino,\\n    TRIM(ci_madre) AS ci_madre,\\n    TRIM(establecimiento_id) AS establecimiento_id,\\n    TRIM(nro_control) AS nro_control,\\n    TRIM(fecha_control) AS fecha_control,\\n    TRIM(peso_nino_kg) AS peso_nino_kg,\\n    TRIM(talla_nino_cm) AS talla_nino_cm,\\n    TRIM(vacuna_aplicada) AS vacuna_aplicada,\\n    TRIM(resultado) AS resultado\\nFROM bronze.bja_controles_pediatricos\\nWHERE control_pediatrico_id IS NOT NULL AND TRIM(control_pediatrico_id) <> \\'\\'',",
+						"     format: 'query') ~> source1",
+						"source1 derive(ci_nino = replace(ci_nino, '-', ''),",
+						"          ci_madre = replace(ci_madre, '-', ''),",
+						"          fecha_control = toDate(fecha_control, 'yyyy-MM-dd'),",
+						"          peso_nino_kg = toDecimal(peso_nino_kg),",
+						"          talla_nino_cm = toDecimal(talla_nino_cm),",
+						"          vacuna_aplicada = initCap(coalesce(vacuna_aplicada, 'No Registrada')),",
+						"          resultado = initCap(coalesce(resultado, 'Sin Resultado')),",
+						"          control_pediatrico_id = toInteger(control_pediatrico_id),",
+						"          establecimiento_id = toInteger(establecimiento_id),",
+						"          nro_control = toInteger(nro_control)) ~> limpiezaBronce",
+						"limpiezaBronce sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          control_pediatrico_id as string,",
+						"          ci_nino as string,",
+						"          ci_madre as string,",
+						"          establecimiento_id as string,",
+						"          nro_control as string,",
+						"          fecha_control as string,",
+						"          peso_nino_kg as string,",
+						"          talla_nino_cm as string,",
+						"          vacuna_aplicada as string,",
+						"          resultado as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          ci_nino,",
+						"          ci_madre,",
+						"          vacuna_aplicada,",
+						"          resultado,",
+						"          control_pediatrico_id,",
+						"          establecimiento_id,",
+						"          nro_control,",
+						"          fecha_control,",
+						"          peso_nino_kg,",
+						"          talla_nino_cm",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/df_plata_bja_controles_prenatales')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -956,6 +1057,111 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/df_plata_bja_establecimientos_salud')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "BJA_bronce_establecimientos_salud",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "silver_bja_establecimientos_salud",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "limpiezaBronce"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          establecimiento_id as string,",
+						"          codigo_snis as string,",
+						"          nombre as string,",
+						"          tipo as string,",
+						"          nivel_atencion as string,",
+						"          municipio as string,",
+						"          departamento as string,",
+						"          red_salud as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     query: 'SELECT \\n    TRIM(establecimiento_id) AS establecimiento_id,\\n    TRIM(codigo_snis) AS codigo_snis,\\n    TRIM(nombre) AS nombre,\\n    TRIM(tipo) AS tipo,\\n    TRIM(nivel_atencion) AS nivel_atencion,\\n    TRIM(municipio) AS municipio,\\n    TRIM(departamento) AS departamento,\\n    TRIM(red_salud) AS red_salud\\nFROM bronze.bja_establecimientos_salud\\nWHERE establecimiento_id IS NOT NULL AND TRIM(establecimiento_id) <> \\'\\'',",
+						"     format: 'query') ~> source1",
+						"source1 derive(establecimiento_id = toInteger(establecimiento_id),",
+						"          codigo_snis = upper(codigo_snis),",
+						"          nombre = initCap(nombre),",
+						"          tipo = initCap(tipo),",
+						"          nivel_atencion = initCap(nivel_atencion),",
+						"          municipio = initCap(municipio),",
+						"          departamento = case(\r",
+						"    upper(departamento) == 'LP', 'La Paz',\r",
+						"    upper(departamento) == 'CBBA' || upper(departamento) == 'CB', 'Cochabamba',\r",
+						"    upper(departamento) == 'SCZ', 'Santa Cruz',\r",
+						"    upper(departamento) == 'OR', 'Oruro',\r",
+						"    upper(departamento) == 'PT', 'Potosí',\r",
+						"    upper(departamento) == 'TJ', 'Tarija',\r",
+						"    upper(departamento) == 'CH', 'Chuquisaca',\r",
+						"    upper(departamento) == 'BN', 'Beni',\r",
+						"    upper(departamento) == 'PA', 'Pando',\r",
+						"    initCap(departamento)\r",
+						"),",
+						"          red_salud = initCap(red_salud)) ~> limpiezaBronce",
+						"limpiezaBronce sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          establecimiento_id as string,",
+						"          codigo_snis as string,",
+						"          nombre as string,",
+						"          tipo as string,",
+						"          nivel_atencion as string,",
+						"          municipio as string,",
+						"          departamento as string,",
+						"          red_salud as string,",
+						"          estado as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          codigo_snis,",
+						"          nombre,",
+						"          tipo,",
+						"          nivel_atencion,",
+						"          municipio,",
+						"          departamento,",
+						"          red_salud,",
+						"          establecimiento_id",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/df_plata_bja_inscripciones')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1033,6 +1239,99 @@
 						"          establecimiento_id,",
 						"          fecha_inscripcion,",
 						"          semana_gestacion",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_plata_bja_pagos')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "BJA_bronce_pagos",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "silver_bja_pagos",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "LimpiezaBronze"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          pago_id as string,",
+						"          ci_beneficiaria as string,",
+						"          concepto_pago as string,",
+						"          monto_bs as string,",
+						"          fecha_pago as string,",
+						"          estado_pago as string,",
+						"          canal_pago as string,",
+						"          nro_comprobante as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     query: 'SELECT \\n    TRIM(pago_id) AS pago_id,\\n    TRIM(ci_beneficiaria) AS ci_beneficiaria,\\n    TRIM(concepto_pago) AS concepto_pago,\\n    TRIM(monto_bs) AS monto_bs,\\n    TRIM(fecha_pago) AS fecha_pago,\\n    TRIM(estado_pago) AS estado_pago,\\n    TRIM(canal_pago) AS canal_pago,\\n    TRIM(nro_comprobante) AS nro_comprobante\\nFROM bronze.bja_pagos\\nWHERE pago_id IS NOT NULL AND TRIM(pago_id) <> \\'\\'',",
+						"     format: 'query') ~> source1",
+						"source1 derive(ci_beneficiaria = replace(ci_beneficiaria, '-', ''),",
+						"          monto_bs = toDecimal(monto_bs),",
+						"          fecha_pago = toDate(fecha_pago, 'yyyy-MM-dd'),",
+						"          canal_pago = initCap(coalesce(canal_pago, 'No Registrado')),",
+						"          nro_comprobante = coalesce(nro_comprobante, 'Sin Comprobante'),",
+						"          pago_id = toInteger(pago_id),",
+						"          estado_pago = replace(initCap(estado_pago), 'Paqado', 'Pagado'),",
+						"          concepto_pago = replace(replace(initCap(concepto_pago), 'Rpenatal', 'Prenatal'), 'Istitucional', 'Institucional')) ~> LimpiezaBronze",
+						"LimpiezaBronze sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          pago_id as string,",
+						"          ci_beneficiaria as string,",
+						"          concepto_pago as string,",
+						"          monto_bs as string,",
+						"          fecha_pago as string,",
+						"          estado_pago as string,",
+						"          canal_pago as string,",
+						"          nro_comprobante as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          ci_beneficiaria,",
+						"          concepto_pago,",
+						"          estado_pago,",
+						"          canal_pago,",
+						"          nro_comprobante,",
+						"          pago_id,",
+						"          fecha_pago,",
+						"          monto_bs",
 						"     )) ~> sink1"
 					]
 				}
@@ -1221,7 +1520,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/df_plata_bja_controles_pediatricos')]",
+			"name": "[concat(parameters('factoryName'), '/df_plata_sup_controles')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1233,7 +1532,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "BJA_bronce_controles_pediatricos",
+								"referenceName": "SUP_bronce_controles",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -1242,7 +1541,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "silver_bja_controles_pediatricos",
+								"referenceName": "silver_sup_controles",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -1250,145 +1549,44 @@
 					],
 					"transformations": [
 						{
-							"name": "limpiezaBronce"
+							"name": "derivedColumn1"
 						}
 					],
 					"scriptLines": [
 						"source(output(",
-						"          control_pediatrico_id as string,",
-						"          ci_nino as string,",
-						"          ci_madre as string,",
+						"          control_id as string,",
+						"          ci_beneficiaria as string,",
 						"          establecimiento_id as string,",
 						"          nro_control as string,",
 						"          fecha_control as string,",
-						"          peso_nino_kg as string,",
-						"          talla_nino_cm as string,",
-						"          vacuna_aplicada as string,",
-						"          resultado as string",
+						"          semana_gestacion as string,",
+						"          peso_madre_kg as string,",
+						"          presion_arterial as string",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     query: 'SELECT \\n    TRIM(control_pediatrico_id) AS control_pediatrico_id,\\n    TRIM(ci_nino) AS ci_nino,\\n    TRIM(ci_madre) AS ci_madre,\\n    TRIM(establecimiento_id) AS establecimiento_id,\\n    TRIM(nro_control) AS nro_control,\\n    TRIM(fecha_control) AS fecha_control,\\n    TRIM(peso_nino_kg) AS peso_nino_kg,\\n    TRIM(talla_nino_cm) AS talla_nino_cm,\\n    TRIM(vacuna_aplicada) AS vacuna_aplicada,\\n    TRIM(resultado) AS resultado\\nFROM bronze.bja_controles_pediatricos\\nWHERE control_pediatrico_id IS NOT NULL AND TRIM(control_pediatrico_id) <> \\'\\'',",
+						"     query: 'SELECT \\n    TRIM(control_id) AS control_id,\\n    TRIM(ci_beneficiaria) AS ci_beneficiaria,\\n    TRIM(establecimiento_id) AS establecimiento_id,\\n    TRIM(nro_control) AS nro_control,\\n    TRIM(fecha_control) AS fecha_control,\\n    TRIM(semana_gestacion) AS semana_gestacion,\\n    TRIM(peso_madre_kg) AS peso_madre_kg,\\n    TRIM(presion_arterial) AS presion_arterial\\nFROM bronze.sup_controles\\nWHERE control_id IS NOT NULL AND TRIM(control_id) <> \\'\\'',",
 						"     format: 'query') ~> source1",
-						"source1 derive(ci_nino = replace(ci_nino, '-', ''),",
-						"          ci_madre = replace(ci_madre, '-', ''),",
-						"          fecha_control = toDate(fecha_control, 'yyyy-MM-dd'),",
-						"          peso_nino_kg = toDecimal(peso_nino_kg),",
-						"          talla_nino_cm = toDecimal(talla_nino_cm),",
-						"          vacuna_aplicada = initCap(coalesce(vacuna_aplicada, 'No Registrada')),",
-						"          resultado = initCap(coalesce(resultado, 'Sin Resultado')),",
-						"          control_pediatrico_id = toInteger(control_pediatrico_id),",
+						"source1 derive(fecha_control = coalesce(toDate(fecha_control, 'yyyy-MM-dd'), toDate(fecha_control, 'MM/dd/yyyy'), toDate(fecha_control, 'dd/MM/yyyy')),",
+						"          ci_beneficiaria = replace(ci_beneficiaria, '-', ''),",
+						"          peso_madre_kg = toDecimal(coalesce(peso_madre_kg, '0')),",
+						"          presion_arterial = coalesce(presion_arterial, 'No Registrado'),",
+						"          control_id = toInteger(control_id),",
 						"          establecimiento_id = toInteger(establecimiento_id),",
-						"          nro_control = toInteger(nro_control)) ~> limpiezaBronce",
-						"limpiezaBronce sink(allowSchemaDrift: true,",
+						"          nro_control = toInteger(nro_control),",
+						"          semana_gestacion = toInteger(semana_gestacion)) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
-						"          control_pediatrico_id as string,",
-						"          ci_nino as string,",
-						"          ci_madre as string,",
+						"          control_id as string,",
+						"          ci_beneficiaria as string,",
 						"          establecimiento_id as string,",
 						"          nro_control as string,",
 						"          fecha_control as string,",
-						"          peso_nino_kg as string,",
-						"          talla_nino_cm as string,",
-						"          vacuna_aplicada as string,",
-						"          resultado as string",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     recreate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          ci_nino,",
-						"          ci_madre,",
-						"          vacuna_aplicada,",
-						"          resultado,",
-						"          control_pediatrico_id,",
-						"          establecimiento_id,",
-						"          nro_control,",
-						"          fecha_control,",
-						"          peso_nino_kg,",
-						"          talla_nino_cm",
-						"     )) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_plata_bja_pagos')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "silver"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "BJA_bronce_pagos",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "silver_bja_pagos",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "LimpiezaBronze"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          pago_id as string,",
-						"          ci_beneficiaria as string,",
-						"          concepto_pago as string,",
-						"          monto_bs as string,",
-						"          fecha_pago as string,",
-						"          estado_pago as string,",
-						"          canal_pago as string,",
-						"          nro_comprobante as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     query: 'SELECT \\n    TRIM(pago_id) AS pago_id,\\n    TRIM(ci_beneficiaria) AS ci_beneficiaria,\\n    TRIM(concepto_pago) AS concepto_pago,\\n    TRIM(monto_bs) AS monto_bs,\\n    TRIM(fecha_pago) AS fecha_pago,\\n    TRIM(estado_pago) AS estado_pago,\\n    TRIM(canal_pago) AS canal_pago,\\n    TRIM(nro_comprobante) AS nro_comprobante\\nFROM bronze.bja_pagos\\nWHERE pago_id IS NOT NULL AND TRIM(pago_id) <> \\'\\'',",
-						"     format: 'query') ~> source1",
-						"source1 derive(ci_beneficiaria = replace(ci_beneficiaria, '-', ''),",
-						"          monto_bs = toDecimal(monto_bs),",
-						"          fecha_pago = toDate(fecha_pago, 'yyyy-MM-dd'),",
-						"          canal_pago = initCap(coalesce(canal_pago, 'No Registrado')),",
-						"          nro_comprobante = coalesce(nro_comprobante, 'Sin Comprobante'),",
-						"          pago_id = toInteger(pago_id),",
-						"          estado_pago = replace(initCap(estado_pago), 'Paqado', 'Pagado'),",
-						"          concepto_pago = replace(replace(initCap(concepto_pago), 'Rpenatal', 'Prenatal'), 'Istitucional', 'Institucional')) ~> LimpiezaBronze",
-						"LimpiezaBronze sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          pago_id as string,",
-						"          ci_beneficiaria as string,",
-						"          concepto_pago as string,",
-						"          monto_bs as string,",
-						"          fecha_pago as string,",
-						"          estado_pago as string,",
-						"          canal_pago as string,",
-						"          nro_comprobante as string",
+						"          semana_gestacion as string,",
+						"          peso_madre as string,",
+						"          presion_arterial as string",
 						"     ),",
 						"     deletable:false,",
 						"     insertable:true,",
@@ -1401,13 +1599,13 @@
 						"     errorHandlingOption: 'stopOnFirstError',",
 						"     mapColumn(",
 						"          ci_beneficiaria,",
-						"          concepto_pago,",
-						"          estado_pago,",
-						"          canal_pago,",
-						"          nro_comprobante,",
-						"          pago_id,",
-						"          fecha_pago,",
-						"          monto_bs",
+						"          presion_arterial,",
+						"          control_id,",
+						"          establecimiento_id,",
+						"          nro_control,",
+						"          fecha_control,",
+						"          semana_gestacion,",
+						"          peso_madre = peso_madre_kg",
 						"     )) ~> sink1"
 					]
 				}
@@ -1415,7 +1613,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/df_plata_bja_establecimientos_salud')]",
+			"name": "[concat(parameters('factoryName'), '/df_plata_sup_inscripciones')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1427,7 +1625,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "BJA_bronce_establecimientos_salud",
+								"referenceName": "SUP_bronce_inscripciones",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -1436,7 +1634,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "silver_bja_establecimientos_salud",
+								"referenceName": "silver_sup_inscripciones",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -1444,55 +1642,37 @@
 					],
 					"transformations": [
 						{
-							"name": "limpiezaBronce"
+							"name": "derivedColumn1"
 						}
 					],
 					"scriptLines": [
 						"source(output(",
+						"          inscripcion_id as string,",
+						"          ci_beneficiaria as string,",
 						"          establecimiento_id as string,",
-						"          codigo_snis as string,",
-						"          nombre as string,",
-						"          tipo as string,",
-						"          nivel_atencion as string,",
-						"          municipio as string,",
-						"          departamento as string,",
-						"          red_salud as string",
+						"          fecha_inscripcion as string,",
+						"          semana_gestacion as string,",
+						"          estado as string",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     query: 'SELECT \\n    TRIM(establecimiento_id) AS establecimiento_id,\\n    TRIM(codigo_snis) AS codigo_snis,\\n    TRIM(nombre) AS nombre,\\n    TRIM(tipo) AS tipo,\\n    TRIM(nivel_atencion) AS nivel_atencion,\\n    TRIM(municipio) AS municipio,\\n    TRIM(departamento) AS departamento,\\n    TRIM(red_salud) AS red_salud\\nFROM bronze.bja_establecimientos_salud\\nWHERE establecimiento_id IS NOT NULL AND TRIM(establecimiento_id) <> \\'\\'',",
+						"     query: 'SELECT \\n    TRIM(inscripcion_id) AS inscripcion_id,\\n    TRIM(ci_beneficiaria) AS ci_beneficiaria,\\n    TRIM(establecimiento_id) AS establecimiento_id,\\n    TRIM(fecha_inscripcion) AS fecha_inscripcion,\\n    TRIM(semana_gestacion) AS semana_gestacion,\\n    TRIM(estado) AS estado\\nFROM bronze.sup_inscripciones\\nWHERE inscripcion_id IS NOT NULL AND TRIM(inscripcion_id) <> \\'\\'',",
 						"     format: 'query') ~> source1",
-						"source1 derive(establecimiento_id = toInteger(establecimiento_id),",
-						"          codigo_snis = upper(codigo_snis),",
-						"          nombre = initCap(nombre),",
-						"          tipo = initCap(tipo),",
-						"          nivel_atencion = initCap(nivel_atencion),",
-						"          municipio = initCap(municipio),",
-						"          departamento = case(\r",
-						"    upper(departamento) == 'LP', 'La Paz',\r",
-						"    upper(departamento) == 'CBBA' || upper(departamento) == 'CB', 'Cochabamba',\r",
-						"    upper(departamento) == 'SCZ', 'Santa Cruz',\r",
-						"    upper(departamento) == 'OR', 'Oruro',\r",
-						"    upper(departamento) == 'PT', 'Potosí',\r",
-						"    upper(departamento) == 'TJ', 'Tarija',\r",
-						"    upper(departamento) == 'CH', 'Chuquisaca',\r",
-						"    upper(departamento) == 'BN', 'Beni',\r",
-						"    upper(departamento) == 'PA', 'Pando',\r",
-						"    initCap(departamento)\r",
-						"),",
-						"          red_salud = initCap(red_salud)) ~> limpiezaBronce",
-						"limpiezaBronce sink(allowSchemaDrift: true,",
+						"source1 derive(ci_beneficiaria = replace(ci_beneficiaria, '-', ''),",
+						"          fecha_inscripcion = toDate(fecha_inscripcion, 'yyyy-MM-dd'),",
+						"          semana_gestacion = toInteger(semana_gestacion),",
+						"          estado = initCap(estado),",
+						"          inscripcion_id = toInteger(inscripcion_id),",
+						"          establecimiento_id = toInteger(establecimiento_id)) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
+						"          inscripcion_id as string,",
+						"          ci_beneficiaria as string,",
 						"          establecimiento_id as string,",
-						"          codigo_snis as string,",
-						"          nombre as string,",
-						"          tipo as string,",
-						"          nivel_atencion as string,",
-						"          municipio as string,",
-						"          departamento as string,",
-						"          red_salud as string,",
+						"          fecha_inscripcion as string,",
+						"          semana_gestacion as string,",
 						"          estado as string",
 						"     ),",
 						"     deletable:false,",
@@ -1505,19 +1685,19 @@
 						"     skipDuplicateMapOutputs: true,",
 						"     errorHandlingOption: 'stopOnFirstError',",
 						"     mapColumn(",
-						"          codigo_snis,",
-						"          nombre,",
-						"          tipo,",
-						"          nivel_atencion,",
-						"          municipio,",
-						"          departamento,",
-						"          red_salud,",
-						"          establecimiento_id",
+						"          ci_beneficiaria,",
+						"          estado,",
+						"          inscripcion_id,",
+						"          establecimiento_id,",
+						"          semana_gestacion,",
+						"          fecha_inscripcion",
 						"     )) ~> sink1"
 					]
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/silver_sup_inscripciones')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/pip_cargar_bronce')]",
