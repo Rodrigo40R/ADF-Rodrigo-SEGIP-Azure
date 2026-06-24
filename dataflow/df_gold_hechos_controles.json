@@ -30,6 +30,9 @@
 				},
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -60,7 +63,11 @@
 				"          peso_medido = peso_madre_kg,",
 				"          resultado_o_presion = presion_arterial,",
 				"          tipo_programa = 'BJA') ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"derivedColumn1 derive(id_fecha = iifNull(id_fecha, '1900-01-01'),",
+				"          peso_medido = iifNull(toDouble(peso_medido), toDouble(0.0)),",
+				"          peso_madre_kg = iifNull(toDouble(peso_madre_kg), toDouble(0.0)),",
+				"          fecha_control = iifNull(fecha_control, '1900-01-01')) ~> derivedColumn2",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          id_hecho_control as integer,",
