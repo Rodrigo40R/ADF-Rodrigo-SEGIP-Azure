@@ -27,6 +27,9 @@
 			"transformations": [
 				{
 					"name": "aggregate1"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -54,7 +57,9 @@
 				"          peso_paquete_kg = first(peso_paquete_kg),",
 				"          fecha_entrega = first(fecha_entrega),",
 				"          id_fecha = first(fecha_entrega)) ~> aggregate1",
-				"aggregate1 sink(allowSchemaDrift: true,",
+				"aggregate1 derive(fecha_entrega = iifNull(fecha_entrega, '1900-01-01'),",
+				"          id_fecha = iifNull(id_fecha, '1900-01-01')) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          id_hecho_entrega as integer,",
