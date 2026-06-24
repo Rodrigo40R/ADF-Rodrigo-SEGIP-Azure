@@ -57,7 +57,7 @@
 				"source1 derive(id_fecha = iifNull(fecha_pago, '1900-01-01'),",
 				"          canal_pago = case(\r",
 				"    in(['Pago Móvvil', 'Paago Móvil', 'Pgo Móvil','Pago Móóvil', 'Pago Ómvil', 'Pago Móvli'], canal_pago), 'Pago Móvil',\r",
-				"    in(['Baanco Unión', 'Bacno Unión', 'Banc Ounión', 'Bannco Unión', 'Banco Unin', 'Bnaco Unión', 'Banco Uunión', 'Banco Nión'], canal_pago), 'Banco Unión',\r",
+				"    in(['Baanco Unión', 'Bacno Unión','Banc Unión', 'Banc Ounión', 'Bannco Unión', 'Banco Unin', 'Bnaco Unión', 'Banco Uunión', 'Banco Nión'], canal_pago), 'Banco Unión',\r",
 				"    in(['Transferencia Bancarai', 'Tranferencia Bancaria'], canal_pago), 'Transferencia Bancaria',\r",
 				"    canal_pago\r",
 				"),",
