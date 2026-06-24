@@ -37,6 +37,242 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/pip_carga_oro')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "dim_persona",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_gold_dim_persona",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "dim_establecimiento",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "dim_paquete",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_gold_dim_establecimiento",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "dim_paquete",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "dim_persona",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_gold_dim_paquete",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "hechos_controles",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "hechos_pagos",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_gold_hechos_controles",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "hechos_pagos",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "hechos_entregas",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_gold_hechos_pagos",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "hechos_entregas",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "dim_establecimiento",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_gold_hechos_entregas",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_gold_dim_persona')]",
+				"[concat(variables('factoryId'), '/dataflows/df_gold_dim_establecimiento')]",
+				"[concat(variables('factoryId'), '/dataflows/df_gold_dim_paquete')]",
+				"[concat(variables('factoryId'), '/dataflows/df_gold_hechos_controles')]",
+				"[concat(variables('factoryId'), '/dataflows/df_gold_hechos_pagos')]",
+				"[concat(variables('factoryId'), '/dataflows/df_gold_hechos_entregas')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pip_cargar_bronce')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -162,6 +398,424 @@
 				"[concat(variables('factoryId'), '/dataflows/df_bronce_segip')]",
 				"[concat(variables('factoryId'), '/dataflows/df_bronce_bja')]",
 				"[concat(variables('factoryId'), '/dataflows/df_bronce_sup')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pip_cargar_plata')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "df_plata_segip_personas",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_plata_segip_personas",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronceSegip": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "bja_controles_pediatricos",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_plata_bja_controles_pediatricos",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "bja_controles_prenatales",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_plata_bja_controles_prenatales",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "bja_establecimientos_salud",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_plata_bja_establecimientos_salud",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "bja_inscripciones",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_plata_bja_inscripciones",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronceIncripciones": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "bja_pagos",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_plata_bja_pagos",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "bja_partos",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_plata_bja_partos",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "sup_boletas",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_plata_sup_boletas",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "sup_catalogos_paquetes",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_plata_sup_catalogo_paquetes",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "sup_controles",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_plata_sup_controles",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "sup_entregas",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_plata_sup_entregas",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "sup_establecimientos",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_plata_sup_establecimientos",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "sup_inscripciones",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_plata_sup_inscripciones",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_plata_segip_personas')]",
+				"[concat(variables('factoryId'), '/dataflows/df_plata_bja_controles_pediatricos')]",
+				"[concat(variables('factoryId'), '/dataflows/df_plata_bja_controles_prenatales')]",
+				"[concat(variables('factoryId'), '/dataflows/df_plata_bja_establecimientos_salud')]",
+				"[concat(variables('factoryId'), '/dataflows/df_plata_bja_inscripciones')]",
+				"[concat(variables('factoryId'), '/dataflows/df_plata_bja_pagos')]",
+				"[concat(variables('factoryId'), '/dataflows/df_plata_bja_partos')]",
+				"[concat(variables('factoryId'), '/dataflows/df_plata_sup_boletas')]",
+				"[concat(variables('factoryId'), '/dataflows/df_plata_sup_catalogo_paquetes')]",
+				"[concat(variables('factoryId'), '/dataflows/df_plata_sup_controles')]",
+				"[concat(variables('factoryId'), '/dataflows/df_plata_sup_entregas')]",
+				"[concat(variables('factoryId'), '/dataflows/df_plata_sup_establecimientos')]",
+				"[concat(variables('factoryId'), '/dataflows/df_plata_sup_inscripciones')]"
 			]
 		},
 		{
@@ -1781,6 +2435,397 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/oro_Dim_Establecimiento')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "gold"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id_establecimiento",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "codigo_snis",
+						"type": "nvarchar"
+					},
+					{
+						"name": "nombre",
+						"type": "nvarchar"
+					},
+					{
+						"name": "tipo",
+						"type": "nvarchar"
+					},
+					{
+						"name": "nivel_atencion",
+						"type": "nvarchar"
+					},
+					{
+						"name": "municipio",
+						"type": "nvarchar"
+					},
+					{
+						"name": "departamento",
+						"type": "nvarchar"
+					},
+					{
+						"name": "red_salud",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "oro",
+					"table": "Dim_Establecimiento"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/oro_Dim_Paquete')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "gold"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id_paquete",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "nombre",
+						"type": "nvarchar"
+					},
+					{
+						"name": "contenido",
+						"type": "nvarchar"
+					},
+					{
+						"name": "peso_estandar_kg",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 2
+					},
+					{
+						"name": "costo_estimado_bs",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 2
+					}
+				],
+				"typeProperties": {
+					"schema": "oro",
+					"table": "Dim_Paquete"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/oro_Dim_Persona')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "gold"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "ci_beneficiaria",
+						"type": "nvarchar"
+					},
+					{
+						"name": "nombres",
+						"type": "nvarchar"
+					},
+					{
+						"name": "apellidos",
+						"type": "nvarchar"
+					},
+					{
+						"name": "fecha_nacimiento",
+						"type": "date"
+					},
+					{
+						"name": "estado_civil",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "oro",
+					"table": "Dim_Persona"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/oro_Dim_Tiempo')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "gold"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id_fecha",
+						"type": "date"
+					},
+					{
+						"name": "año",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "mes",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "dia",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "trimestre",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "nombre_mes",
+						"type": "nvarchar"
+					},
+					{
+						"name": "nombre_dia",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "oro",
+					"table": "Dim_Tiempo"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/oro_Hechos_Controles')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "gold"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id_hecho_control",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ci_beneficiaria",
+						"type": "nvarchar"
+					},
+					{
+						"name": "id_establecimiento",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "id_fecha",
+						"type": "date"
+					},
+					{
+						"name": "nro_control",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "semana_gestacion",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "peso_medido",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 2
+					},
+					{
+						"name": "resultado_o_presion",
+						"type": "nvarchar"
+					},
+					{
+						"name": "tipo_programa",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "oro",
+					"table": "Hechos_Controles"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/oro_Hechos_Entregas')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "gold"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id_hecho_entrega",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ci_beneficiaria",
+						"type": "nvarchar"
+					},
+					{
+						"name": "id_establecimiento",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "id_paquete",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "id_fecha",
+						"type": "date"
+					},
+					{
+						"name": "lote_produccion",
+						"type": "nvarchar"
+					},
+					{
+						"name": "peso_entregado",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 2
+					}
+				],
+				"typeProperties": {
+					"schema": "oro",
+					"table": "Hechos_Entregas"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/oro_Hechos_Pagos')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "gold"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id_pago",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ci_beneficiaria",
+						"type": "nvarchar"
+					},
+					{
+						"name": "id_fecha",
+						"type": "date"
+					},
+					{
+						"name": "concepto_pago",
+						"type": "nvarchar"
+					},
+					{
+						"name": "monto_bs",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 2
+					},
+					{
+						"name": "estado_pago",
+						"type": "nvarchar"
+					},
+					{
+						"name": "canal_pago",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "oro",
+					"table": "Hechos_Pagos"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/silver_SEGIP')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -3381,6 +4426,569 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/df_gold_dim_establecimiento')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "silver_bja_establecimientos_salud",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "oro_Dim_Establecimiento",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          establecimiento_id as string,",
+						"          codigo_snis as string,",
+						"          nombre as string,",
+						"          tipo as string,",
+						"          nivel_atencion as string,",
+						"          municipio as string,",
+						"          departamento as string,",
+						"          red_salud as string,",
+						"          estado as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 aggregate(groupBy(establecimiento_id),",
+						"     codigo_snis = first(codigo_snis),",
+						"          nombre = first(nombre),",
+						"          tipo = first(tipo),",
+						"          nivel_atencion = first(nivel_atencion),",
+						"          municipio = first(municipio),",
+						"          departamento = first(departamento),",
+						"          red_salud = first(red_salud)) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          id_establecimiento as integer,",
+						"          codigo_snis as string,",
+						"          nombre as string,",
+						"          tipo as string,",
+						"          nivel_atencion as string,",
+						"          municipio as string,",
+						"          departamento as string,",
+						"          red_salud as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          codigo_snis,",
+						"          nombre,",
+						"          tipo,",
+						"          nivel_atencion,",
+						"          municipio,",
+						"          departamento,",
+						"          red_salud,",
+						"          id_establecimiento = establecimiento_id",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/silver_bja_establecimientos_salud')]",
+				"[concat(variables('factoryId'), '/datasets/oro_Dim_Establecimiento')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_gold_dim_paquete')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "silver_sup_catalogo_paquetes",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "oro_Dim_Paquete",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          paquete_id as string,",
+						"          nombre as string,",
+						"          contenido as string,",
+						"          peso_estandar as string,",
+						"          costo_estimado_bs as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 aggregate(groupBy(paquete_id),",
+						"     nombre = first(nombre),",
+						"          contenido = first(contenido),",
+						"          peso_estandar = first(peso_estandar),",
+						"          costo_estimado_bs = first(costo_estimado_bs)) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          id_paquete as integer,",
+						"          nombre as string,",
+						"          contenido as string,",
+						"          peso_estandar_kg as decimal(10,2),",
+						"          costo_estimado_bs as decimal(10,2)",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          nombre,",
+						"          contenido,",
+						"          id_paquete = paquete_id,",
+						"          peso_estandar_kg = peso_estandar,",
+						"          costo_estimado_bs",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/silver_sup_catalogo_paquetes')]",
+				"[concat(variables('factoryId'), '/datasets/oro_Dim_Paquete')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_gold_dim_persona')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "silver_SEGIP",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "oro_Dim_Persona",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						},
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          CI as string,",
+						"          Nombres as string,",
+						"          Ap_Patern as string,",
+						"          Ap_Matern as string,",
+						"          Genero as string,",
+						"          Estado_Civ as string,",
+						"          Municipio as string,",
+						"          Fecha_Nac as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 aggregate(groupBy(CI),",
+						"     Nombres = first(Nombres),",
+						"          Ap_Patern = first(Ap_Patern),",
+						"          Ap_Matern = first(Ap_Matern),",
+						"          Fecha_Nac = first(Fecha_Nac),",
+						"          Genero = first(Genero),",
+						"          Estado_Civ = first({Estado_Civ})) ~> aggregate1",
+						"aggregate1 derive(apellidos_completos = concatWS(' ', Ap_Patern, Ap_Matern)) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          ci_beneficiaria as string,",
+						"          nombres as string,",
+						"          apellidos as string,",
+						"          fecha_nacimiento as date,",
+						"          estado_civil as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          nombres = Nombres,",
+						"          ci_beneficiaria = CI,",
+						"          estado_civil = Estado_Civ,",
+						"          fecha_nacimiento = Fecha_Nac,",
+						"          apellidos = apellidos_completos",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/silver_SEGIP')]",
+				"[concat(variables('factoryId'), '/datasets/oro_Dim_Persona')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_gold_hechos_controles')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "silver_bja_controles_prenatales",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "oro_Hechos_Controles",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						},
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          control_prenatal_id as string,",
+						"          ci_beneficiaria as string,",
+						"          establecimiento_id as string,",
+						"          nro_control as string,",
+						"          fecha_control as string,",
+						"          semana_gestacion as string,",
+						"          peso_madre_kg as string,",
+						"          presion_arterial as string,",
+						"          resultado as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 aggregate(groupBy(control_prenatal_id),",
+						"     ci_beneficiaria = first(ci_beneficiaria),",
+						"          establecimiento_id = first(establecimiento_id),",
+						"          fecha_control = first(fecha_control),",
+						"          nro_control = first(nro_control),",
+						"          semana_gestacion = first(semana_gestacion),",
+						"          peso_madre_kg = first(peso_madre_kg),",
+						"          presion_arterial = first(presion_arterial)) ~> aggregate1",
+						"aggregate1 derive(id_fecha = fecha_control,",
+						"          peso_medido = peso_madre_kg,",
+						"          resultado_o_presion = presion_arterial,",
+						"          tipo_programa = 'BJA') ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          id_hecho_control as integer,",
+						"          ci_beneficiaria as string,",
+						"          id_establecimiento as integer,",
+						"          id_fecha as date,",
+						"          nro_control as integer,",
+						"          semana_gestacion as integer,",
+						"          peso_medido as decimal(10,2),",
+						"          resultado_o_presion as string,",
+						"          tipo_programa as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          ci_beneficiaria,",
+						"          resultado_o_presion,",
+						"          tipo_programa,",
+						"          id_establecimiento = establecimiento_id,",
+						"          id_fecha,",
+						"          nro_control,",
+						"          semana_gestacion,",
+						"          peso_medido",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/silver_bja_controles_prenatales')]",
+				"[concat(variables('factoryId'), '/datasets/oro_Hechos_Controles')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_gold_hechos_entregas')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "silver_sup_entregas",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "oro_Hechos_Entregas",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          entrega_id as string,",
+						"          boleta_id as string,",
+						"          ci_beneficiaria as string,",
+						"          establecimiento_id as string,",
+						"          paquete_id as string,",
+						"          paquete_nombre as string,",
+						"          fecha_entrega as string,",
+						"          lote_produccion as string,",
+						"          peso_paquete_kg as string,",
+						"          fecha_proxima_entrega as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 aggregate(groupBy(entrega_id),",
+						"     ci_beneficiaria = first(ci_beneficiaria),",
+						"          establecimiento_id = first(establecimiento_id),",
+						"          paquete_id = first(paquete_id),",
+						"          lote_produccion = first(lote_produccion),",
+						"          peso_paquete_kg = first(peso_paquete_kg),",
+						"          fecha_entrega = first(fecha_entrega),",
+						"          id_fecha = first(fecha_entrega)) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          id_hecho_entrega as integer,",
+						"          ci_beneficiaria as string,",
+						"          id_establecimiento as integer,",
+						"          id_paquete as integer,",
+						"          id_fecha as date,",
+						"          lote_produccion as string,",
+						"          peso_entregado as decimal(10,2)",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          ci_beneficiaria,",
+						"          lote_produccion,",
+						"          id_establecimiento = establecimiento_id,",
+						"          peso_entregado = peso_paquete_kg,",
+						"          id_paquete = paquete_id,",
+						"          id_fecha",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/silver_sup_entregas')]",
+				"[concat(variables('factoryId'), '/datasets/oro_Hechos_Entregas')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_gold_hechos_pagos')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "silver_bja_pagos",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "oro_Hechos_Pagos",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						},
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          pago_id as string,",
+						"          ci_beneficiaria as string,",
+						"          concepto_pago as string,",
+						"          monto_bs as string,",
+						"          fecha_pago as string,",
+						"          estado_pago as string,",
+						"          canal_pago as string,",
+						"          nro_comprobante as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"derivedColumn1 aggregate(groupBy(pago_id),",
+						"     ci_beneficiaria = first(ci_beneficiaria),",
+						"          id_fecha = first(fecha_pago),",
+						"          concepto_pago = first(fecha_pago),",
+						"          monto_bs = first(monto_bs),",
+						"          estado_pago = first(estado_pago),",
+						"          canal_pago = first(canal_pago)) ~> aggregate1",
+						"source1 derive(id_fecha = fecha_pago) ~> derivedColumn1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          id_pago as integer,",
+						"          ci_beneficiaria as string,",
+						"          id_fecha as date,",
+						"          concepto_pago as string,",
+						"          monto_bs as decimal(10,2),",
+						"          estado_pago as string,",
+						"          canal_pago as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          ci_beneficiaria,",
+						"          concepto_pago,",
+						"          estado_pago,",
+						"          canal_pago,",
+						"          id_fecha,",
+						"          monto_bs",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/silver_bja_pagos')]",
+				"[concat(variables('factoryId'), '/datasets/oro_Hechos_Pagos')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/df_plata_bja_controles_pediatricos')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -4627,1579 +6235,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SUP_bronce_inscripciones')]",
 				"[concat(variables('factoryId'), '/datasets/silver_sup_inscripciones')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_cargar_plata')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "df_plata_segip_personas",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_plata_segip_personas",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"bronceSegip": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "bja_controles_pediatricos",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_plata_bja_controles_pediatricos",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "bja_controles_prenatales",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_plata_bja_controles_prenatales",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "bja_establecimientos_salud",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_plata_bja_establecimientos_salud",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "bja_inscripciones",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_plata_bja_inscripciones",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"bronceIncripciones": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "bja_pagos",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_plata_bja_pagos",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "bja_partos",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_plata_bja_partos",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "sup_boletas",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_plata_sup_boletas",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "sup_catalogos_paquetes",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_plata_sup_catalogo_paquetes",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "sup_controles",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_plata_sup_controles",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "sup_entregas",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_plata_sup_entregas",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "sup_establecimientos",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_plata_sup_establecimientos",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "sup_inscripciones",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_plata_sup_inscripciones",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/df_plata_segip_personas')]",
-				"[concat(variables('factoryId'), '/dataflows/df_plata_bja_controles_pediatricos')]",
-				"[concat(variables('factoryId'), '/dataflows/df_plata_bja_controles_prenatales')]",
-				"[concat(variables('factoryId'), '/dataflows/df_plata_bja_establecimientos_salud')]",
-				"[concat(variables('factoryId'), '/dataflows/df_plata_bja_inscripciones')]",
-				"[concat(variables('factoryId'), '/dataflows/df_plata_bja_pagos')]",
-				"[concat(variables('factoryId'), '/dataflows/df_plata_bja_partos')]",
-				"[concat(variables('factoryId'), '/dataflows/df_plata_sup_boletas')]",
-				"[concat(variables('factoryId'), '/dataflows/df_plata_sup_catalogo_paquetes')]",
-				"[concat(variables('factoryId'), '/dataflows/df_plata_sup_controles')]",
-				"[concat(variables('factoryId'), '/dataflows/df_plata_sup_entregas')]",
-				"[concat(variables('factoryId'), '/dataflows/df_plata_sup_establecimientos')]",
-				"[concat(variables('factoryId'), '/dataflows/df_plata_sup_inscripciones')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/oro_Dim_Establecimiento')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseSEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "gold"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "id_establecimiento",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "codigo_snis",
-						"type": "nvarchar"
-					},
-					{
-						"name": "nombre",
-						"type": "nvarchar"
-					},
-					{
-						"name": "tipo",
-						"type": "nvarchar"
-					},
-					{
-						"name": "nivel_atencion",
-						"type": "nvarchar"
-					},
-					{
-						"name": "municipio",
-						"type": "nvarchar"
-					},
-					{
-						"name": "departamento",
-						"type": "nvarchar"
-					},
-					{
-						"name": "red_salud",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "oro",
-					"table": "Dim_Establecimiento"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/oro_Dim_Paquete')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseSEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "gold"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "id_paquete",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "nombre",
-						"type": "nvarchar"
-					},
-					{
-						"name": "contenido",
-						"type": "nvarchar"
-					},
-					{
-						"name": "peso_estandar_kg",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 2
-					},
-					{
-						"name": "costo_estimado_bs",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 2
-					}
-				],
-				"typeProperties": {
-					"schema": "oro",
-					"table": "Dim_Paquete"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/oro_Dim_Persona')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseSEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "gold"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "ci_beneficiaria",
-						"type": "nvarchar"
-					},
-					{
-						"name": "nombres",
-						"type": "nvarchar"
-					},
-					{
-						"name": "apellidos",
-						"type": "nvarchar"
-					},
-					{
-						"name": "fecha_nacimiento",
-						"type": "date"
-					},
-					{
-						"name": "estado_civil",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "oro",
-					"table": "Dim_Persona"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/oro_Dim_Tiempo')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseSEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "gold"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "id_fecha",
-						"type": "date"
-					},
-					{
-						"name": "año",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "mes",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "dia",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "trimestre",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "nombre_mes",
-						"type": "nvarchar"
-					},
-					{
-						"name": "nombre_dia",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "oro",
-					"table": "Dim_Tiempo"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/oro_Hechos_Controles')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseSEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "gold"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "id_hecho_control",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ci_beneficiaria",
-						"type": "nvarchar"
-					},
-					{
-						"name": "id_establecimiento",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "id_fecha",
-						"type": "date"
-					},
-					{
-						"name": "nro_control",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "semana_gestacion",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "peso_medido",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 2
-					},
-					{
-						"name": "resultado_o_presion",
-						"type": "nvarchar"
-					},
-					{
-						"name": "tipo_programa",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "oro",
-					"table": "Hechos_Controles"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/oro_Hechos_Entregas')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseSEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "gold"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "id_hecho_entrega",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ci_beneficiaria",
-						"type": "nvarchar"
-					},
-					{
-						"name": "id_establecimiento",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "id_paquete",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "id_fecha",
-						"type": "date"
-					},
-					{
-						"name": "lote_produccion",
-						"type": "nvarchar"
-					},
-					{
-						"name": "peso_entregado",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 2
-					}
-				],
-				"typeProperties": {
-					"schema": "oro",
-					"table": "Hechos_Entregas"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/oro_Hechos_Pagos')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseSEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "gold"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "id_pago",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ci_beneficiaria",
-						"type": "nvarchar"
-					},
-					{
-						"name": "id_fecha",
-						"type": "date"
-					},
-					{
-						"name": "concepto_pago",
-						"type": "nvarchar"
-					},
-					{
-						"name": "monto_bs",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 2
-					},
-					{
-						"name": "estado_pago",
-						"type": "nvarchar"
-					},
-					{
-						"name": "canal_pago",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "oro",
-					"table": "Hechos_Pagos"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseSEGIP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_gold_dim_persona')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "gold"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "silver_SEGIP",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "oro_Dim_Persona",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "aggregate1"
-						},
-						{
-							"name": "derivedColumn1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          CI as string,",
-						"          Nombres as string,",
-						"          Ap_Patern as string,",
-						"          Ap_Matern as string,",
-						"          Genero as string,",
-						"          Estado_Civ as string,",
-						"          Municipio as string,",
-						"          Fecha_Nac as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 aggregate(groupBy(CI),",
-						"     Nombres = first(Nombres),",
-						"          Ap_Patern = first(Ap_Patern),",
-						"          Ap_Matern = first(Ap_Matern),",
-						"          Fecha_Nac = first(Fecha_Nac),",
-						"          Genero = first(Genero),",
-						"          Estado_Civ = first({Estado_Civ})) ~> aggregate1",
-						"aggregate1 derive(apellidos_completos = concatWS(' ', Ap_Patern, Ap_Matern)) ~> derivedColumn1",
-						"derivedColumn1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          ci_beneficiaria as string,",
-						"          nombres as string,",
-						"          apellidos as string,",
-						"          fecha_nacimiento as date,",
-						"          estado_civil as string",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     recreate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          nombres = Nombres,",
-						"          ci_beneficiaria = CI,",
-						"          estado_civil = Estado_Civ,",
-						"          fecha_nacimiento = Fecha_Nac,",
-						"          apellidos = apellidos_completos",
-						"     )) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/silver_SEGIP')]",
-				"[concat(variables('factoryId'), '/datasets/oro_Dim_Persona')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_gold_dim_establecimiento')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "gold"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "silver_bja_establecimientos_salud",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "oro_Dim_Establecimiento",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "aggregate1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          establecimiento_id as string,",
-						"          codigo_snis as string,",
-						"          nombre as string,",
-						"          tipo as string,",
-						"          nivel_atencion as string,",
-						"          municipio as string,",
-						"          departamento as string,",
-						"          red_salud as string,",
-						"          estado as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 aggregate(groupBy(establecimiento_id),",
-						"     codigo_snis = first(codigo_snis),",
-						"          nombre = first(nombre),",
-						"          tipo = first(tipo),",
-						"          nivel_atencion = first(nivel_atencion),",
-						"          municipio = first(municipio),",
-						"          departamento = first(departamento),",
-						"          red_salud = first(red_salud)) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          id_establecimiento as integer,",
-						"          codigo_snis as string,",
-						"          nombre as string,",
-						"          tipo as string,",
-						"          nivel_atencion as string,",
-						"          municipio as string,",
-						"          departamento as string,",
-						"          red_salud as string",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     truncate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          codigo_snis,",
-						"          nombre,",
-						"          tipo,",
-						"          nivel_atencion,",
-						"          municipio,",
-						"          departamento,",
-						"          red_salud,",
-						"          id_establecimiento = establecimiento_id",
-						"     )) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/silver_bja_establecimientos_salud')]",
-				"[concat(variables('factoryId'), '/datasets/oro_Dim_Establecimiento')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_gold_dim_paquete')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "gold"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "silver_sup_catalogo_paquetes",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "oro_Dim_Paquete",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "aggregate1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          paquete_id as string,",
-						"          nombre as string,",
-						"          contenido as string,",
-						"          peso_estandar as string,",
-						"          costo_estimado_bs as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 aggregate(groupBy(paquete_id),",
-						"     nombre = first(nombre),",
-						"          contenido = first(contenido),",
-						"          peso_estandar = first(peso_estandar),",
-						"          costo_estimado_bs = first(costo_estimado_bs)) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          id_paquete as integer,",
-						"          nombre as string,",
-						"          contenido as string,",
-						"          peso_estandar_kg as decimal(10,2),",
-						"          costo_estimado_bs as decimal(10,2)",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     truncate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          nombre,",
-						"          contenido,",
-						"          id_paquete = paquete_id,",
-						"          peso_estandar_kg = peso_estandar,",
-						"          costo_estimado_bs",
-						"     )) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/silver_sup_catalogo_paquetes')]",
-				"[concat(variables('factoryId'), '/datasets/oro_Dim_Paquete')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_gold_hechos_controles')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "gold"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "silver_bja_controles_prenatales",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "oro_Hechos_Controles",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "aggregate1"
-						},
-						{
-							"name": "derivedColumn1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          control_prenatal_id as string,",
-						"          ci_beneficiaria as string,",
-						"          establecimiento_id as string,",
-						"          nro_control as string,",
-						"          fecha_control as string,",
-						"          semana_gestacion as string,",
-						"          peso_madre_kg as string,",
-						"          presion_arterial as string,",
-						"          resultado as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 aggregate(groupBy(control_prenatal_id),",
-						"     ci_beneficiaria = first(ci_beneficiaria),",
-						"          establecimiento_id = first(establecimiento_id),",
-						"          fecha_control = first(fecha_control),",
-						"          nro_control = first(nro_control),",
-						"          semana_gestacion = first(semana_gestacion),",
-						"          peso_madre_kg = first(peso_madre_kg),",
-						"          presion_arterial = first(presion_arterial)) ~> aggregate1",
-						"aggregate1 derive(id_fecha = fecha_control,",
-						"          peso_medido = peso_madre_kg,",
-						"          resultado_o_presion = presion_arterial,",
-						"          tipo_programa = 'BJA') ~> derivedColumn1",
-						"derivedColumn1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          id_hecho_control as integer,",
-						"          ci_beneficiaria as string,",
-						"          id_establecimiento as integer,",
-						"          id_fecha as date,",
-						"          nro_control as integer,",
-						"          semana_gestacion as integer,",
-						"          peso_medido as decimal(10,2),",
-						"          resultado_o_presion as string,",
-						"          tipo_programa as string",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          ci_beneficiaria,",
-						"          resultado_o_presion,",
-						"          tipo_programa,",
-						"          id_establecimiento = establecimiento_id,",
-						"          id_fecha,",
-						"          nro_control,",
-						"          semana_gestacion,",
-						"          peso_medido",
-						"     )) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/silver_bja_controles_prenatales')]",
-				"[concat(variables('factoryId'), '/datasets/oro_Hechos_Controles')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_gold_hechos_pagos')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "gold"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "silver_bja_pagos",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "oro_Hechos_Pagos",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "aggregate1"
-						},
-						{
-							"name": "derivedColumn1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          pago_id as string,",
-						"          ci_beneficiaria as string,",
-						"          concepto_pago as string,",
-						"          monto_bs as string,",
-						"          fecha_pago as string,",
-						"          estado_pago as string,",
-						"          canal_pago as string,",
-						"          nro_comprobante as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"derivedColumn1 aggregate(groupBy(pago_id),",
-						"     ci_beneficiaria = first(ci_beneficiaria),",
-						"          id_fecha = first(fecha_pago),",
-						"          concepto_pago = first(fecha_pago),",
-						"          monto_bs = first(monto_bs),",
-						"          estado_pago = first(estado_pago),",
-						"          canal_pago = first(canal_pago)) ~> aggregate1",
-						"source1 derive(id_fecha = fecha_pago) ~> derivedColumn1",
-						"aggregate1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          id_pago as integer,",
-						"          ci_beneficiaria as string,",
-						"          id_fecha as date,",
-						"          concepto_pago as string,",
-						"          monto_bs as decimal(10,2),",
-						"          estado_pago as string,",
-						"          canal_pago as string",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     truncate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          ci_beneficiaria,",
-						"          concepto_pago,",
-						"          estado_pago,",
-						"          canal_pago,",
-						"          id_fecha,",
-						"          monto_bs",
-						"     )) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/silver_bja_pagos')]",
-				"[concat(variables('factoryId'), '/datasets/oro_Hechos_Pagos')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_gold_hechos_entregas')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "gold"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "silver_sup_entregas",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "oro_Hechos_Entregas",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "aggregate1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          entrega_id as string,",
-						"          boleta_id as string,",
-						"          ci_beneficiaria as string,",
-						"          establecimiento_id as string,",
-						"          paquete_id as string,",
-						"          paquete_nombre as string,",
-						"          fecha_entrega as string,",
-						"          lote_produccion as string,",
-						"          peso_paquete_kg as string,",
-						"          fecha_proxima_entrega as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 aggregate(groupBy(entrega_id),",
-						"     ci_beneficiaria = first(ci_beneficiaria),",
-						"          establecimiento_id = first(establecimiento_id),",
-						"          paquete_id = first(paquete_id),",
-						"          lote_produccion = first(lote_produccion),",
-						"          peso_paquete_kg = first(peso_paquete_kg),",
-						"          fecha_entrega = first(fecha_entrega),",
-						"          id_fecha = first(fecha_entrega)) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          id_hecho_entrega as integer,",
-						"          ci_beneficiaria as string,",
-						"          id_establecimiento as integer,",
-						"          id_paquete as integer,",
-						"          id_fecha as date,",
-						"          lote_produccion as string,",
-						"          peso_entregado as decimal(10,2)",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     truncate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          ci_beneficiaria,",
-						"          lote_produccion,",
-						"          id_establecimiento = establecimiento_id,",
-						"          peso_entregado = peso_paquete_kg,",
-						"          id_paquete = paquete_id,",
-						"          id_fecha",
-						"     )) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/silver_sup_entregas')]",
-				"[concat(variables('factoryId'), '/datasets/oro_Hechos_Entregas')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pip_carga_oro')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "dim_persona",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_gold_dim_persona",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "dim_establecimiento",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_gold_dim_establecimiento",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "dim_paquete",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_gold_dim_paquete",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "hechos_controles",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_gold_hechos_controles",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "hechos_pagos",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_gold_hechos_pagos",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "hechos_entregas",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_gold_hechos_entregas",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/df_gold_dim_persona')]",
-				"[concat(variables('factoryId'), '/dataflows/df_gold_dim_establecimiento')]",
-				"[concat(variables('factoryId'), '/dataflows/df_gold_dim_paquete')]",
-				"[concat(variables('factoryId'), '/dataflows/df_gold_hechos_controles')]",
-				"[concat(variables('factoryId'), '/dataflows/df_gold_hechos_pagos')]",
-				"[concat(variables('factoryId'), '/dataflows/df_gold_hechos_entregas')]"
 			]
 		}
 	]

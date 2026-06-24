@@ -481,6 +481,383 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/oro_Dim_Establecimiento')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "gold"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id_establecimiento",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "codigo_snis",
+						"type": "nvarchar"
+					},
+					{
+						"name": "nombre",
+						"type": "nvarchar"
+					},
+					{
+						"name": "tipo",
+						"type": "nvarchar"
+					},
+					{
+						"name": "nivel_atencion",
+						"type": "nvarchar"
+					},
+					{
+						"name": "municipio",
+						"type": "nvarchar"
+					},
+					{
+						"name": "departamento",
+						"type": "nvarchar"
+					},
+					{
+						"name": "red_salud",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "oro",
+					"table": "Dim_Establecimiento"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/oro_Dim_Paquete')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "gold"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id_paquete",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "nombre",
+						"type": "nvarchar"
+					},
+					{
+						"name": "contenido",
+						"type": "nvarchar"
+					},
+					{
+						"name": "peso_estandar_kg",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 2
+					},
+					{
+						"name": "costo_estimado_bs",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 2
+					}
+				],
+				"typeProperties": {
+					"schema": "oro",
+					"table": "Dim_Paquete"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/oro_Dim_Persona')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "gold"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "ci_beneficiaria",
+						"type": "nvarchar"
+					},
+					{
+						"name": "nombres",
+						"type": "nvarchar"
+					},
+					{
+						"name": "apellidos",
+						"type": "nvarchar"
+					},
+					{
+						"name": "fecha_nacimiento",
+						"type": "date"
+					},
+					{
+						"name": "estado_civil",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "oro",
+					"table": "Dim_Persona"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/oro_Dim_Tiempo')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "gold"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id_fecha",
+						"type": "date"
+					},
+					{
+						"name": "año",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "mes",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "dia",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "trimestre",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "nombre_mes",
+						"type": "nvarchar"
+					},
+					{
+						"name": "nombre_dia",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "oro",
+					"table": "Dim_Tiempo"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/oro_Hechos_Controles')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "gold"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id_hecho_control",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ci_beneficiaria",
+						"type": "nvarchar"
+					},
+					{
+						"name": "id_establecimiento",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "id_fecha",
+						"type": "date"
+					},
+					{
+						"name": "nro_control",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "semana_gestacion",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "peso_medido",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 2
+					},
+					{
+						"name": "resultado_o_presion",
+						"type": "nvarchar"
+					},
+					{
+						"name": "tipo_programa",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "oro",
+					"table": "Hechos_Controles"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/oro_Hechos_Entregas')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "gold"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id_hecho_entrega",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ci_beneficiaria",
+						"type": "nvarchar"
+					},
+					{
+						"name": "id_establecimiento",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "id_paquete",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "id_fecha",
+						"type": "date"
+					},
+					{
+						"name": "lote_produccion",
+						"type": "nvarchar"
+					},
+					{
+						"name": "peso_entregado",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 2
+					}
+				],
+				"typeProperties": {
+					"schema": "oro",
+					"table": "Hechos_Entregas"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/oro_Hechos_Pagos')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSEGIP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "gold"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id_pago",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ci_beneficiaria",
+						"type": "nvarchar"
+					},
+					{
+						"name": "id_fecha",
+						"type": "date"
+					},
+					{
+						"name": "concepto_pago",
+						"type": "nvarchar"
+					},
+					{
+						"name": "monto_bs",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 2
+					},
+					{
+						"name": "estado_pago",
+						"type": "nvarchar"
+					},
+					{
+						"name": "canal_pago",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "oro",
+					"table": "Hechos_Pagos"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/silver_SEGIP')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -759,383 +1136,6 @@
 				"typeProperties": {
 					"schema": "silver",
 					"table": "bja_inscripciones"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/silver_bja_pagos')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseSEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "silver"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "pago_id",
-						"type": "varchar"
-					},
-					{
-						"name": "ci_beneficiaria",
-						"type": "varchar"
-					},
-					{
-						"name": "concepto_pago",
-						"type": "varchar"
-					},
-					{
-						"name": "monto_bs",
-						"type": "varchar"
-					},
-					{
-						"name": "fecha_pago",
-						"type": "varchar"
-					},
-					{
-						"name": "estado_pago",
-						"type": "varchar"
-					},
-					{
-						"name": "canal_pago",
-						"type": "varchar"
-					},
-					{
-						"name": "nro_comprobante",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "silver",
-					"table": "bja_pagos"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/silver_bja_partos')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseSEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "silver"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "parto_id",
-						"type": "varchar"
-					},
-					{
-						"name": "ci_madre",
-						"type": "varchar"
-					},
-					{
-						"name": "ci_recien_nacido",
-						"type": "varchar"
-					},
-					{
-						"name": "establecimiento_id",
-						"type": "varchar"
-					},
-					{
-						"name": "fecha_parto",
-						"type": "varchar"
-					},
-					{
-						"name": "tipo_parto",
-						"type": "varchar"
-					},
-					{
-						"name": "peso_nacimiento_kg",
-						"type": "varchar"
-					},
-					{
-						"name": "talla_nacimiento_cm",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "silver",
-					"table": "bja_partos"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/silver_sup_boletas')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseSEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "silver"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "boleta_id",
-						"type": "varchar"
-					},
-					{
-						"name": "control_id",
-						"type": "varchar"
-					},
-					{
-						"name": "ci_beneficiaria",
-						"type": "varchar"
-					},
-					{
-						"name": "nro_boleta",
-						"type": "varchar"
-					},
-					{
-						"name": "fecha_emision",
-						"type": "varchar"
-					},
-					{
-						"name": "estado",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "silver",
-					"table": "sup_boletas"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/silver_sup_catalogo_paquetes')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseSEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "silver"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "paquete_id",
-						"type": "varchar"
-					},
-					{
-						"name": "nombre",
-						"type": "varchar"
-					},
-					{
-						"name": "contenido",
-						"type": "varchar"
-					},
-					{
-						"name": "peso_estandar",
-						"type": "varchar"
-					},
-					{
-						"name": "costo_estimado_bs",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "silver",
-					"table": "sup_catalogo_paquetes"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/silver_sup_controles')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseSEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "silver"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "control_id",
-						"type": "varchar"
-					},
-					{
-						"name": "ci_beneficiaria",
-						"type": "varchar"
-					},
-					{
-						"name": "establecimiento_id",
-						"type": "varchar"
-					},
-					{
-						"name": "nro_control",
-						"type": "varchar"
-					},
-					{
-						"name": "fecha_control",
-						"type": "varchar"
-					},
-					{
-						"name": "semana_gestacion",
-						"type": "varchar"
-					},
-					{
-						"name": "peso_madre",
-						"type": "varchar"
-					},
-					{
-						"name": "presion_arterial",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "silver",
-					"table": "sup_controles"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/silver_sup_entregas')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseSEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "silver"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "entrega_id",
-						"type": "varchar"
-					},
-					{
-						"name": "boleta_id",
-						"type": "varchar"
-					},
-					{
-						"name": "ci_beneficiaria",
-						"type": "varchar"
-					},
-					{
-						"name": "establecimiento_id",
-						"type": "varchar"
-					},
-					{
-						"name": "paquete_id",
-						"type": "varchar"
-					},
-					{
-						"name": "paquete_nombre",
-						"type": "varchar"
-					},
-					{
-						"name": "fecha_entrega",
-						"type": "varchar"
-					},
-					{
-						"name": "lote_produccion",
-						"type": "varchar"
-					},
-					{
-						"name": "peso_paquete_kg",
-						"type": "varchar"
-					},
-					{
-						"name": "fecha_proxima_entrega",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "silver",
-					"table": "sup_entregas"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/silver_sup_establecimientos')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseSEGIP",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "silver"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "establecimiento_id",
-						"type": "varchar"
-					},
-					{
-						"name": "codigo_snis",
-						"type": "varchar"
-					},
-					{
-						"name": "nombre",
-						"type": "varchar"
-					},
-					{
-						"name": "tipo",
-						"type": "varchar"
-					},
-					{
-						"name": "nivel_atencion",
-						"type": "varchar"
-					},
-					{
-						"name": "municipio",
-						"type": "varchar"
-					},
-					{
-						"name": "departamento",
-						"type": "varchar"
-					},
-					{
-						"name": "red_salud",
-						"type": "varchar"
-					},
-					{
-						"name": "estado",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "silver",
-					"table": "sup_establecimientos"
 				}
 			},
 			"dependsOn": []
