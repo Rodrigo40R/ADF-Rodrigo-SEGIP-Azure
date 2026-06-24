@@ -1266,6 +1266,9 @@
 					"transformations": [
 						{
 							"name": "aggregate1"
+						},
+						{
+							"name": "derivedColumn1"
 						}
 					],
 					"scriptLines": [
@@ -1292,7 +1295,19 @@
 						"          municipio = first(municipio),",
 						"          departamento = first(departamento),",
 						"          red_salud = first(red_salud)) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
+						"aggregate1 derive(departamento = case(\r",
+						"    in(['Sc', 'SC', 'SCZ', 'Sta Cruz'], departamento), 'Santa Cruz',\r",
+						"    in(['Cbba', 'CBBA', 'Cba'], departamento), 'Cochabamba',\r",
+						"    in(['Lp', 'LP'], departamento), 'La Paz',\r",
+						"    in(['Tj', 'TJ'], departamento), 'Tarija',\r",
+						"    in(['Or', 'OR'], departamento), 'Oruro',\r",
+						"    in(['Pt', 'PT'], departamento), 'Potosí',\r",
+						"    in(['Ch', 'CH'], departamento), 'Chuquisaca',\r",
+						"    in(['Bn', 'BN'], departamento), 'Beni',\r",
+						"    in(['Pd', 'PD'], departamento), 'Pando',\r",
+						"    departamento\r",
+						")) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
 						"          id_establecimiento as integer,",
@@ -1533,6 +1548,9 @@
 						},
 						{
 							"name": "derivedColumn1"
+						},
+						{
+							"name": "derivedColumn2"
 						}
 					],
 					"scriptLines": [
@@ -1563,7 +1581,11 @@
 						"          peso_medido = peso_madre_kg,",
 						"          resultado_o_presion = presion_arterial,",
 						"          tipo_programa = 'BJA') ~> derivedColumn1",
-						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"derivedColumn1 derive(id_fecha = iifNull(id_fecha, '1900-01-01'),",
+						"          peso_medido = iifNull(toDouble(peso_medido), toDouble(0.0)),",
+						"          peso_madre_kg = iifNull(toDouble(peso_madre_kg), toDouble(0.0)),",
+						"          fecha_control = iifNull(fecha_control, '1900-01-01')) ~> derivedColumn2",
+						"derivedColumn2 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
 						"          id_hecho_control as integer,",
@@ -1630,6 +1652,9 @@
 					"transformations": [
 						{
 							"name": "aggregate1"
+						},
+						{
+							"name": "derivedColumn1"
 						}
 					],
 					"scriptLines": [
@@ -1657,7 +1682,9 @@
 						"          peso_paquete_kg = first(peso_paquete_kg),",
 						"          fecha_entrega = first(fecha_entrega),",
 						"          id_fecha = first(fecha_entrega)) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
+						"aggregate1 derive(fecha_entrega = iifNull(fecha_entrega, '1900-01-01'),",
+						"          id_fecha = iifNull(id_fecha, '1900-01-01')) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
 						"          id_hecho_entrega as integer,",
